@@ -1,165 +1,288 @@
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>拜拜高血压</title>
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#0a0a0f;--s1:#13131a;--s2:#1c1c26;--bd:rgba(255,255,255,0.07);
-  --text:#f0f0f8;--muted:#6b6b88;
-  --red:#ff4757;--red2:rgba(255,71,87,0.15);
-  --orange:#ff9f43;--orange2:rgba(255,159,67,0.15);
-  --yellow:#ffd700;--yellow2:rgba(255,215,0,0.12);
-  --green:#2ed573;--green2:rgba(46,213,115,0.12);
-  --blue:#3d9eff;--blue2:rgba(61,158,255,0.12);
-  --purple:#a29bfe;
-  --r:18px;
+:root {
+  --bg: #080810;
+  --s1: #10101a;
+  --s2: #181824;
+  --s3: #20202e;
+  --bd: rgba(255,255,255,0.06);
+  --bd2: rgba(255,255,255,0.12);
+  --text: #eeeef8;
+  --muted: #5a5a78;
+  --muted2: #8888aa;
+  --red: #ff4757;
+  --red2: rgba(255,71,87,0.12);
+  --red3: rgba(255,71,87,0.25);
+  --orange: #ff9f43;
+  --orange2: rgba(255,159,67,0.12);
+  --yellow: #ffd32a;
+  --yellow2: rgba(255,211,42,0.12);
+  --green: #2ed573;
+  --green2: rgba(46,213,115,0.12);
+  --blue: #54a0ff;
+  --blue2: rgba(84,160,255,0.12);
+  --purple: #a29bfe;
+  --r: 20px;
+  --r2: 14px;
 }
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;overflow:hidden}
-body{background:var(--bg);color:var(--text);font-family:'Noto Sans SC',-apple-system,sans-serif;font-size:15px;position:fixed;width:100%;height:100%}
 
-.page{display:none;position:absolute;inset:0;overflow-y:auto;padding-bottom:90px}
-.page.active{display:block}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; overflow: hidden; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans SC', -apple-system, sans-serif;
+  font-size: 15px;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
+
+/* Pages */
+.page { display: none; position: absolute; inset: 0; overflow-y: auto; padding-bottom: 88px; -webkit-overflow-scrolling: touch; }
+.page.active { display: block; }
 
 /* Header */
-.hdr{padding:52px 18px 14px;background:linear-gradient(180deg,var(--bg) 60%,transparent);position:sticky;top:0;z-index:10;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
-.hdr-row{display:flex;justify-content:space-between;align-items:center}
-.hdr-title{font-size:24px;font-weight:900;letter-spacing:-0.5px;background:linear-gradient(135deg,#fff 30%,#888);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.hdr-sub{font-size:11px;color:var(--muted);margin-top:3px}
+.hdr {
+  padding: 54px 20px 14px;
+  background: linear-gradient(180deg, var(--bg) 70%, transparent);
+  position: sticky; top: 0; z-index: 20;
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+}
+.hdr-row { display: flex; justify-content: space-between; align-items: center; }
+.hdr-title {
+  font-size: 26px; font-weight: 900; letter-spacing: -0.8px;
+  background: linear-gradient(135deg, #fff 0%, #aaa 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.hdr-sub { font-size: 11px; color: var(--muted2); margin-top: 3px; letter-spacing: 0.3px; }
+
+/* User bar */
+.user-bar { display: flex; gap: 8px; margin-top: 12px; overflow-x: auto; padding-bottom: 2px; }
+.user-bar::-webkit-scrollbar { display: none; }
+.uchip {
+  background: var(--s2); border: 1px solid var(--bd);
+  border-radius: 100px; padding: 6px 14px;
+  font-size: 13px; color: var(--muted2); cursor: pointer;
+  white-space: nowrap; flex-shrink: 0; transition: all 0.2s;
+  font-family: inherit;
+}
+.uchip.on { background: var(--red); border-color: var(--red); color: #fff; font-weight: 700; }
+.uchip.add { border-style: dashed; }
+
+/* Content */
+.content { padding: 12px 16px 16px; }
 
 /* Cards */
-.content{padding:0 16px 16px}
-.card{background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);padding:16px 18px;margin-bottom:12px;position:relative;overflow:hidden}
-.card::before{content:'';position:absolute;inset:0;border-radius:var(--r);background:linear-gradient(135deg,rgba(255,255,255,0.025) 0%,transparent 60%);pointer-events:none}
-.card-lbl{font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-bottom:14px}
-
-/* Forms */
-.field{margin-bottom:12px}
-.f-lbl{font-size:12px;color:var(--muted);margin-bottom:5px}
-input,select{width:100%;background:var(--s2);border:1px solid var(--bd);border-radius:11px;color:var(--text);font-family:'Noto Sans SC',-apple-system,sans-serif;font-size:16px;padding:11px 13px;outline:none;-webkit-appearance:none;appearance:none;transition:border-color .2s}
-input:focus,select:focus{border-color:var(--red)}
-select option{background:#1c1c26}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-.trow{display:flex;align-items:center;gap:8px}
-.tsep{color:var(--muted);font-size:13px;flex-shrink:0}
-.hint{font-size:10px;color:var(--muted);text-align:center;margin-top:4px}
-
-/* Buttons */
-.btn{width:100%;padding:14px;border:none;border-radius:13px;font-family:'Noto Sans SC',-apple-system,sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:opacity .2s,transform .1s}
-.btn:active{opacity:.85;transform:scale(.99)}
-.btn-red{background:linear-gradient(135deg,#ff4757,#ff3742);color:#fff;box-shadow:0 4px 20px rgba(255,71,87,0.3)}
-.btn-ghost{background:var(--s2);color:var(--text);border:1px solid var(--bd);margin-top:8px}
-
-/* Bottom nav */
-.bnav{position:fixed;bottom:0;left:0;right:0;background:rgba(10,10,15,0.96);border-top:1px solid var(--bd);display:flex;padding:10px 0 28px;z-index:100;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
-.nb{flex:1;background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 0;cursor:pointer;font-family:'Noto Sans SC',-apple-system,sans-serif;font-size:10px;color:var(--muted);transition:color .2s}
-.nb.on{color:var(--red)}
-.nb-i{font-size:22px}
-
-/* User selector */
-.user-bar{display:flex;align-items:center;gap:8px;margin-bottom:14px;overflow-x:auto;padding-bottom:2px}
-.user-bar::-webkit-scrollbar{display:none}
-.user-chip{background:var(--s2);border:1px solid var(--bd);border-radius:100px;padding:6px 14px;font-size:13px;color:var(--muted);cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .2s}
-.user-chip.on{background:var(--red);border-color:var(--red);color:#fff;font-weight:700}
-.user-chip.add-btn{border-style:dashed;color:var(--muted)}
+.card {
+  background: var(--s1); border: 1px solid var(--bd);
+  border-radius: var(--r); padding: 16px 18px; margin-bottom: 10px;
+  position: relative; overflow: hidden;
+}
+.card::after {
+  content: ''; position: absolute; inset: 0; border-radius: var(--r);
+  background: linear-gradient(135deg, rgba(255,255,255,0.025) 0%, transparent 50%);
+  pointer-events: none;
+}
+.clbl { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; color: var(--muted); text-transform: uppercase; margin-bottom: 14px; }
 
 /* Profile card */
-.prof-card{background:linear-gradient(135deg,#1a1025,#0d1525);border:1px solid rgba(162,155,254,0.15)}
-.prof-inner{display:flex;align-items:center;gap:14px}
-.avatar{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;box-shadow:0 4px 16px rgba(0,0,0,0.4)}
-.prof-name{font-size:18px;font-weight:700}
-.prof-meta{font-size:12px;color:var(--muted);margin-top:3px}
-.prof-age{font-size:11px;color:var(--yellow);margin-top:3px;font-weight:600}
+.prof-card { background: linear-gradient(135deg, #14102a 0%, #0a1428 100%); border-color: rgba(162,155,254,0.12); }
+.prof-inner { display: flex; align-items: center; gap: 12px; }
+.avatar {
+  width: 50px; height: 50px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; flex-shrink: 0;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+}
+.pname { font-size: 17px; font-weight: 700; }
+.pmeta { font-size: 12px; color: var(--muted2); margin-top: 2px; }
+.page { font-size: 11px; color: var(--yellow); margin-top: 3px; font-weight: 600; }
 
 /* Daily rows */
-.daily-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--bd)}
-.daily-row:last-child{border-bottom:none;padding-bottom:0}
-.daily-row:first-child{padding-top:0}
-.d-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
-.d-key{font-size:11px;color:var(--muted);margin-bottom:2px}
-.d-val{font-size:14px;font-weight:500}
-.d-sub{font-size:11px;color:var(--muted);margin-top:1px}
-.edit-btn{margin-left:auto;background:var(--s2);border:1px solid var(--bd);border-radius:9px;padding:5px 12px;font-size:12px;color:var(--muted);cursor:pointer;flex-shrink:0;font-family:inherit}
+.drow { display: flex; align-items: flex-start; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--bd); }
+.drow:last-child { border-bottom: none; padding-bottom: 0; }
+.drow:first-child { padding-top: 0; }
+.dicon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.dkey { font-size: 11px; color: var(--muted2); margin-bottom: 3px; }
+.dval { font-size: 14px; font-weight: 500; font-family: 'DM Mono', monospace; }
+.dsub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.ml-auto { margin-left: auto; }
 
-/* BP cards */
-.bp-card{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:13px 15px;margin-bottom:9px;position:relative}
-.bp-top{display:flex;align-items:center;gap:8px;margin-bottom:11px}
-.bp-time{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
-.bp-badge{padding:2px 9px;border-radius:100px;font-size:10px;font-weight:700;letter-spacing:.3px}
-.bp-vals{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0}
-.bpv{text-align:center;padding:0 6px}
-.bpv+.bpv{border-left:1px solid var(--bd)}
-.bvk{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:.3px}
-.bvv{font-size:22px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
-.bvu{font-size:10px;color:var(--muted);margin-top:2px}
-.del-btn{position:absolute;top:10px;right:10px;background:none;border:none;color:rgba(255,255,255,0.15);font-size:20px;cursor:pointer;padding:2px 5px;border-radius:7px}
-.del-btn:active{color:var(--red)}
+/* Small button */
+.sbtn {
+  background: var(--s2); border: 1px solid var(--bd);
+  border-radius: 9px; padding: 5px 12px;
+  font-size: 12px; color: var(--muted2); cursor: pointer;
+  flex-shrink: 0; font-family: inherit; transition: all 0.2s;
+}
+.sbtn:active { opacity: 0.7; }
 
-/* Alert banner */
-.alert-banner{border-radius:12px;padding:10px 14px;margin-bottom:10px;display:flex;align-items:center;gap:10px;font-size:13px;font-weight:500}
-.alert-icon{font-size:20px;flex-shrink:0}
+/* Alert */
+.alert {
+  border-radius: 13px; padding: 12px 14px; margin-bottom: 10px;
+  display: flex; align-items: flex-start; gap: 10px; font-size: 13px;
+}
+.alert-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+.alert-title { font-weight: 700; margin-bottom: 2px; }
+.alert-sub { font-size: 11px; opacity: 0.8; }
+
+/* BP card */
+.bpcard {
+  background: var(--s1); border: 1px solid var(--bd);
+  border-radius: var(--r2); padding: 14px 15px; margin-bottom: 8px; position: relative;
+}
+.bptop { display: flex; align-items: center; gap: 7px; margin-bottom: 12px; flex-wrap: wrap; }
+.bptime { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted2); }
+.badge { padding: 3px 9px; border-radius: 100px; font-size: 10px; font-weight: 700; letter-spacing: 0.3px; }
+.bpgrid { display: grid; grid-template-columns: 1fr 1fr 1fr; }
+.bpitem { text-align: center; padding: 0 6px; }
+.bpitem + .bpitem { border-left: 1px solid var(--bd); }
+.bpk { font-size: 10px; color: var(--muted2); margin-bottom: 4px; letter-spacing: 0.3px; }
+.bpv { font-family: 'DM Mono', monospace; font-size: 22px; font-weight: 700; line-height: 1; }
+.bpu { font-size: 10px; color: var(--muted); margin-top: 3px; }
+.delbtn {
+  position: absolute; top: 10px; right: 10px;
+  background: none; border: none; color: var(--bd2);
+  font-size: 20px; cursor: pointer; padding: 2px 5px; border-radius: 7px;
+  transition: color 0.2s;
+}
+.delbtn:active { color: var(--red); }
 
 /* Add box */
-.add-box{background:linear-gradient(135deg,rgba(255,71,87,0.08),rgba(255,71,87,0.03));border:1px solid rgba(255,71,87,0.2);border-radius:var(--r);padding:15px 16px;margin-bottom:12px}
-.add-lbl{font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--red);text-transform:uppercase;margin-bottom:13px}
+.addbox {
+  background: linear-gradient(135deg, rgba(255,71,87,0.07), rgba(255,71,87,0.02));
+  border: 1px solid rgba(255,71,87,0.18); border-radius: var(--r);
+  padding: 15px 16px; margin-bottom: 10px;
+}
+.addlbl { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; color: var(--red); text-transform: uppercase; margin-bottom: 13px; }
+
+/* Forms */
+.field { margin-bottom: 11px; }
+.flbl { font-size: 12px; color: var(--muted2); margin-bottom: 5px; letter-spacing: 0.2px; }
+input, select {
+  width: 100%; background: var(--s2); border: 1px solid var(--bd);
+  border-radius: 11px; color: var(--text);
+  font-family: 'DM Mono', monospace; font-size: 16px;
+  padding: 11px 13px; outline: none;
+  -webkit-appearance: none; appearance: none; transition: border-color 0.2s;
+}
+input:focus, select:focus { border-color: var(--red); background: var(--s3); }
+select option { background: #18182a; }
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.trow { display: flex; align-items: center; gap: 8px; }
+.tsep { color: var(--muted2); font-size: 13px; flex-shrink: 0; }
+.next-day { font-size: 10px; color: var(--muted2); margin-top: 4px; display: flex; align-items: center; gap: 5px; }
+.hint { font-size: 10px; color: var(--muted); text-align: center; margin-top: 4px; }
+
+/* Checkbox */
+.cb-row { display: flex; align-items: center; gap: 6px; }
+.cb-row input[type=checkbox] { width: 16px; height: 16px; flex-shrink: 0; }
+.cb-lbl { font-size: 12px; color: var(--muted2); font-family: 'Noto Sans SC', sans-serif; }
+
+/* Buttons */
+.btn {
+  width: 100%; padding: 14px; border: none; border-radius: 13px;
+  font-family: 'Noto Sans SC', sans-serif; font-size: 16px; font-weight: 700;
+  cursor: pointer; transition: opacity 0.2s, transform 0.1s; letter-spacing: 0.2px;
+}
+.btn:active { opacity: 0.85; transform: scale(0.99); }
+.btn-red { background: linear-gradient(135deg, #ff4757, #ff3742); color: #fff; box-shadow: 0 4px 20px rgba(255,71,87,0.28); }
+.btn-ghost { background: var(--s2); color: var(--text); border: 1px solid var(--bd); margin-top: 8px; }
+.btn-danger { background: rgba(255,71,87,0.15); color: var(--red); border: 1px solid rgba(255,71,87,0.3); margin-top: 8px; }
+
+/* Photo OCR button */
+.ocr-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  background: var(--s2); border: 1px dashed var(--bd2); border-radius: 11px;
+  padding: 12px; color: var(--muted2); font-size: 14px; cursor: pointer;
+  margin-bottom: 11px; font-family: 'Noto Sans SC', sans-serif; transition: all 0.2s;
+}
+.ocr-btn:active { opacity: 0.7; }
+.ocr-loading { display: none; text-align: center; color: var(--muted2); font-size: 13px; padding: 8px 0; }
+
+/* Bottom nav */
+.bnav {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: rgba(8,8,16,0.96); border-top: 1px solid var(--bd);
+  display: flex; padding: 10px 0 26px; z-index: 100;
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+}
+.nb {
+  flex: 1; background: none; border: none;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 4px 0; cursor: pointer;
+  font-family: 'Noto Sans SC', sans-serif; font-size: 10px; color: var(--muted);
+  transition: color 0.2s;
+}
+.nb.on { color: var(--red); }
+.nbi { font-size: 22px; }
+
+/* Section title */
+.sec { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; color: var(--muted); text-transform: uppercase; padding: 4px 2px 9px; display: flex; align-items: center; justify-content: space-between; }
 
 /* Stats */
-.stats-g{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
-.stat-card{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:14px;text-align:center}
-.sv{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1;margin-bottom:5px}
-.sl{font-size:11px;color:var(--muted)}
-.chart-card{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:14px;margin-bottom:12px}
-.ct{font-size:10px;font-weight:700;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:12px}
-.bars{display:flex;align-items:flex-end;gap:4px;height:75px}
-.bw{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:3px;height:100%}
-.b{width:100%;border-radius:3px 3px 0 0;min-height:3px;transition:height .5s cubic-bezier(.34,1.2,.64,1)}
-.bl{font-size:8px;color:var(--muted);font-variant-numeric:tabular-nums}
+.sg { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin-bottom: 12px; }
+.sc { background: var(--s1); border: 1px solid var(--bd); border-radius: var(--r2); padding: 14px; text-align: center; }
+.sv { font-family: 'DM Mono', monospace; font-size: 22px; font-weight: 700; line-height: 1; margin-bottom: 5px; }
+.sl { font-size: 11px; color: var(--muted2); }
+.cc { background: var(--s1); border: 1px solid var(--bd); border-radius: var(--r2); padding: 14px; margin-bottom: 10px; }
+.ct { font-size: 10px; font-weight: 700; letter-spacing: 1px; color: var(--muted); text-transform: uppercase; margin-bottom: 12px; }
+.bars { display: flex; align-items: flex-end; gap: 4px; height: 72px; }
+.bw { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 3px; height: 100%; }
+.bar { width: 100%; border-radius: 3px 3px 0 0; min-height: 3px; transition: height 0.5s cubic-bezier(0.34,1.2,0.64,1); }
+.barlbl { font-family: 'DM Mono', monospace; font-size: 8px; color: var(--muted); }
 
 /* Tabs */
-.tabs{display:flex;gap:6px;margin-top:10px;overflow-x:auto;padding-bottom:2px}
-.tabs::-webkit-scrollbar{display:none}
-.tab{background:var(--s2);border:1px solid var(--bd);border-radius:100px;padding:6px 14px;font-size:12px;color:var(--muted);cursor:pointer;white-space:nowrap;flex-shrink:0;font-family:inherit;font-weight:500}
-.tab.on{background:var(--red);border-color:var(--red);color:#fff;font-weight:700}
+.tabs { display: flex; gap: 6px; margin-top: 10px; overflow-x: auto; padding-bottom: 2px; }
+.tabs::-webkit-scrollbar { display: none; }
+.tab { background: var(--s2); border: 1px solid var(--bd); border-radius: 100px; padding: 6px 14px; font-size: 12px; color: var(--muted2); cursor: pointer; white-space: nowrap; flex-shrink: 0; font-family: inherit; font-weight: 500; transition: all 0.2s; }
+.tab.on { background: var(--red); border-color: var(--red); color: #fff; font-weight: 700; }
 
 /* History */
-.day-g{margin-bottom:20px}
-.day-hdr{font-size:11px;font-weight:700;color:var(--muted);margin-bottom:9px;padding:0 2px;display:flex;align-items:center;gap:8px}
-.day-hdr::after{content:'';flex:1;height:1px;background:var(--bd)}
-
-/* Sec title */
-.sec{font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;padding:4px 2px 9px;display:flex;align-items:center;justify-content:space-between}
+.dayg { margin-bottom: 20px; }
+.dayhdr { font-size: 11px; font-weight: 700; color: var(--muted); margin-bottom: 9px; padding: 0 2px; display: flex; align-items: center; gap: 8px; }
+.dayhdr::after { content: ''; flex: 1; height: 1px; background: var(--bd); }
 
 /* Modal */
-.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;align-items:flex-end;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
-.modal-bg.open{display:flex}
-.modal{background:var(--s1);border-radius:22px 22px 0 0;padding:22px 16px 44px;width:100%;max-height:88vh;overflow-y:auto;border-top:1px solid var(--bd)}
-.modal-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
-.modal-title{font-size:17px;font-weight:700}
-.modal-close{background:var(--s2);border:1px solid var(--bd);border-radius:9px;padding:5px 13px;font-size:13px;color:var(--muted);cursor:pointer;font-family:inherit}
+.modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 200; align-items: flex-end; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+.modal-bg.open { display: flex; }
+.modal { background: var(--s1); border-radius: 24px 24px 0 0; padding: 22px 16px 44px; width: 100%; max-height: 88vh; overflow-y: auto; border-top: 1px solid var(--bd); }
+.mhdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+.mtitle { font-size: 17px; font-weight: 700; }
+.mclose { background: var(--s2); border: 1px solid var(--bd); border-radius: 9px; padding: 5px 13px; font-size: 13px; color: var(--muted2); cursor: pointer; font-family: inherit; }
 
 /* Empty */
-.empty{text-align:center;padding:50px 20px;color:var(--muted)}
-.ei{font-size:46px;margin-bottom:10px;opacity:.3}
+.empty { text-align: center; padding: 50px 20px; color: var(--muted2); }
+.emptyicon { font-size: 44px; margin-bottom: 10px; opacity: 0.3; }
 
 /* Toast */
-.toast{position:fixed;bottom:98px;left:50%;transform:translateX(-50%) translateY(8px);background:rgba(255,255,255,0.1);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.15);color:#fff;padding:10px 20px;border-radius:100px;font-size:14px;font-weight:500;opacity:0;transition:all .3s;pointer-events:none;z-index:999;white-space:nowrap}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast { position: fixed; bottom: 96px; left: 50%; transform: translateX(-50%) translateY(8px); background: rgba(255,255,255,0.08); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.12); color: #fff; padding: 10px 20px; border-radius: 100px; font-size: 14px; font-weight: 500; opacity: 0; transition: all 0.3s; pointer-events: none; z-index: 999; white-space: nowrap; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-/* BP grade reference */
-.grade-ref{border-radius:12px;padding:12px 14px;background:var(--s2);margin-bottom:12px}
-.grade-row{display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid var(--bd);font-size:12px}
-.grade-row:last-child{border-bottom:none}
-.grade-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+/* Grade ref */
+.grade-ref { background: var(--s2); border-radius: 12px; padding: 12px 14px; margin-bottom: 12px; }
+.grade-row { display: flex; align-items: center; gap: 10px; padding: 5px 0; border-bottom: 1px solid var(--bd); font-size: 12px; color: var(--muted2); }
+.grade-row:last-child { border-bottom: none; }
+.gdot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+/* Export */
+.export-area { background: var(--s2); border-radius: 12px; padding: 12px; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted2); max-height: 200px; overflow-y: auto; white-space: pre; margin-bottom: 12px; line-height: 1.6; }
 
 input[type=date]::-webkit-calendar-picker-indicator,
-input[type=time]::-webkit-calendar-picker-indicator{filter:invert(.5);opacity:.6}
+input[type=time]::-webkit-calendar-picker-indicator { filter: invert(0.5); opacity: 0.6; }
+input[type=file] { display: none; }
 </style>
 </head>
 <body>
@@ -169,10 +292,9 @@ input[type=time]::-webkit-calendar-picker-indicator{filter:invert(.5);opacity:.6
   <div class="hdr">
     <div class="hdr-row">
       <div><div class="hdr-title">拜拜高血压</div><div class="hdr-sub" id="today-lbl"></div></div>
-      <div id="bp-badge" style="background:var(--red2);border:1px solid rgba(255,71,87,0.3);border-radius:100px;padding:5px 13px;font-size:12px;color:var(--red);font-weight:600">今日 0/3</div>
+      <div id="bp-badge" style="background:var(--red2);border:1px solid var(--red3);border-radius:100px;padding:5px 13px;font-size:12px;color:var(--red);font-weight:700">今日 0/3</div>
     </div>
-    <!-- 用户切换 -->
-    <div class="user-bar" id="user-bar" style="margin-top:12px"></div>
+    <div class="user-bar" id="user-bar"></div>
   </div>
   <div class="content">
     <div class="card prof-card" id="home-prof"></div>
@@ -180,11 +302,17 @@ input[type=time]::-webkit-calendar-picker-indicator{filter:invert(.5);opacity:.6
     <div class="card" id="daily-card"></div>
     <div class="sec">今日血压记录</div>
     <div id="today-bps"></div>
-    <div class="add-box" id="add-box">
-      <div class="add-lbl">＋ 添加测量</div>
-      <div class="field"><div class="f-lbl">测量时间</div><input type="time" id="m-time"></div>
+    <div class="addbox" id="addbox">
+      <div class="addlbl">＋ 添加测量</div>
+      <!-- 拍照识别 -->
+      <div class="ocr-btn" onclick="triggerOCR()">
+        <span>📷</span><span>拍照识别血压数值</span>
+      </div>
+      <div class="ocr-loading" id="ocr-loading">🔍 AI 识别中...</div>
+      <input type="file" id="ocr-input" accept="image/*" capture="environment" onchange="handleOCR(this)">
+      <div class="field"><div class="flbl">测量时间</div><input type="time" id="m-time"></div>
       <div class="field">
-        <div class="f-lbl">高压 · 低压 · 心率</div>
+        <div class="flbl">高压 · 低压 · 心率</div>
         <div class="g3">
           <div><input type="number" id="m-high" placeholder="高压"><div class="hint">mmHg</div></div>
           <div><input type="number" id="m-low" placeholder="低压"><div class="hint">mmHg</div></div>
@@ -200,7 +328,7 @@ input[type=time]::-webkit-calendar-picker-indicator{filter:invert(.5);opacity:.6
 <div class="page" id="pg-history">
   <div class="hdr">
     <div class="hdr-row"><div class="hdr-title">历史记录</div></div>
-    <div class="user-bar" id="hist-user-bar" style="margin-top:12px"></div>
+    <div class="user-bar" id="hist-user-bar" style="margin-top:10px"></div>
   </div>
   <div class="content" id="history-content"></div>
 </div>
@@ -212,15 +340,15 @@ input[type=time]::-webkit-calendar-picker-indicator{filter:invert(.5);opacity:.6
     <div class="user-bar" id="stats-user-bar" style="margin-top:10px"></div>
     <div class="tabs">
       <button class="tab on" onclick="setPeriod('week',this)">近7天</button>
-      <button class="tab" onclick="setPeriod('month',this)">近1个月</button>
-      <button class="tab" onclick="setPeriod('quarter',this)">近3个月</button>
+      <button class="tab" onclick="setPeriod('month',this)">近1月</button>
+      <button class="tab" onclick="setPeriod('quarter',this)">近3月</button>
       <button class="tab" onclick="setPeriod('all',this)">全部</button>
     </div>
   </div>
   <div class="content" id="stats-content"></div>
 </div>
 
-<!-- 我的 -->
+<!-- 用户管理 -->
 <div class="page" id="pg-profile">
   <div class="hdr"><div class="hdr-title">用户管理</div></div>
   <div class="content" id="profile-content"></div>
@@ -228,45 +356,53 @@ input[type=time]::-webkit-calendar-picker-indicator{filter:invert(.5);opacity:.6
 
 <!-- 底部导航 -->
 <nav class="bnav">
-  <button class="nb on" onclick="go('home',this)"><span class="nb-i">🏠</span>首页</button>
-  <button class="nb" onclick="go('history',this)"><span class="nb-i">📋</span>历史</button>
-  <button class="nb" onclick="go('stats',this)"><span class="nb-i">📊</span>统计</button>
-  <button class="nb" onclick="go('profile',this)"><span class="nb-i">👥</span>用户</button>
+  <button class="nb on" onclick="go('home',this)"><span class="nbi">🏠</span>首页</button>
+  <button class="nb" onclick="go('history',this)"><span class="nbi">📋</span>历史</button>
+  <button class="nb" onclick="go('stats',this)"><span class="nbi">📊</span>统计</button>
+  <button class="nb" onclick="go('profile',this)"><span class="nbi">👥</span>用户</button>
 </nav>
 
-<!-- 每日数据弹窗 -->
+<!-- 今日数据弹窗 -->
 <div class="modal-bg" id="daily-modal">
   <div class="modal">
-    <div class="modal-hdr">
-      <div class="modal-title">今日基本数据</div>
-      <button class="modal-close" onclick="closeModal('daily-modal')">完成</button>
-    </div>
-    <div class="field"><div class="f-lbl">⚖️ 体重（kg）</div><input type="number" id="d-weight" placeholder="例如 65.5" step="0.1"></div>
-    <div class="field"><div class="f-lbl">💼 上班时间</div>
+    <div class="mhdr"><div class="mtitle">今日基本数据</div><button class="mclose" onclick="closeMod('daily-modal')">完成</button></div>
+    <div class="field"><div class="flbl">⚖️ 体重（kg）</div><input type="number" id="d-weight" placeholder="例如 65.5" step="0.1"></div>
+    <div class="field">
+      <div class="flbl">💼 上班时间</div>
       <div class="trow"><input type="time" id="d-ws"><span class="tsep">→</span><input type="time" id="d-we"></div>
+      <div class="next-day"><input type="checkbox" id="d-we-next"><label class="cb-lbl" for="d-we-next">下班时间跨天（次日）</label></div>
     </div>
-    <div class="field"><div class="f-lbl">🌙 睡觉时间</div>
+    <div class="field">
+      <div class="flbl">🌙 睡觉时间</div>
       <div class="trow"><input type="time" id="d-ss"><span class="tsep">→</span><input type="time" id="d-se"></div>
+      <div class="next-day"><input type="checkbox" id="d-se-next"><label class="cb-lbl" for="d-se-next">起床时间跨天（次日）</label></div>
     </div>
     <button class="btn btn-red" onclick="saveDaily()" style="margin-top:8px">保存</button>
   </div>
 </div>
 
-<!-- 添加/编辑用户弹窗 -->
+<!-- 用户弹窗 -->
 <div class="modal-bg" id="user-modal">
   <div class="modal">
-    <div class="modal-hdr">
-      <div class="modal-title" id="user-modal-title">添加用户</div>
-      <button class="modal-close" onclick="closeModal('user-modal')">取消</button>
+    <div class="mhdr"><div class="mtitle" id="umod-title">添加用户</div><button class="mclose" onclick="closeMod('user-modal')">取消</button></div>
+    <div class="field"><div class="flbl">姓名</div><input type="text" id="u-name" placeholder="请输入姓名"></div>
+    <div class="g2" style="margin-bottom:11px">
+      <div><div class="flbl">性别</div><select id="u-gender"><option value="">请选择</option><option value="男">男</option><option value="女">女</option></select></div>
+      <div><div class="flbl">职业</div><input type="text" id="u-job" placeholder="职业"></div>
     </div>
-    <div class="field"><div class="f-lbl">姓名</div><input type="text" id="u-name" placeholder="请输入姓名"></div>
-    <div class="g2" style="margin-bottom:12px">
-      <div><div class="f-lbl">性别</div><select id="u-gender"><option value="">请选择</option><option value="男">男</option><option value="女">女</option></select></div>
-      <div><div class="f-lbl">职业</div><input type="text" id="u-job" placeholder="职业"></div>
-    </div>
-    <div class="field"><div class="f-lbl">出生年月日</div><input type="date" id="u-birth"></div>
+    <div class="field"><div class="flbl">出生年月日</div><input type="date" id="u-birth"></div>
     <button class="btn btn-red" onclick="saveUser()" style="margin-top:8px">保存</button>
-    <button class="btn btn-ghost" id="del-user-btn" onclick="deleteCurrentEditUser()" style="display:none">删除此用户</button>
+    <button class="btn btn-danger" id="del-user-btn" onclick="deleteUser()" style="display:none">注销此用户</button>
+  </div>
+</div>
+
+<!-- 导出弹窗 -->
+<div class="modal-bg" id="export-modal">
+  <div class="modal">
+    <div class="mhdr"><div class="mtitle">导出数据</div><button class="mclose" onclick="closeMod('export-modal')">关闭</button></div>
+    <div class="export-area" id="export-area"></div>
+    <button class="btn btn-red" onclick="copyExport()">📋 复制全部数据</button>
+    <p style="font-size:11px;color:var(--muted2);text-align:center;margin-top:10px">复制后可粘贴到微信、备忘录或发给医生</p>
   </div>
 </div>
 
@@ -274,946 +410,388 @@ input[type=time]::-webkit-calendar-picker-indicator{filter:invert(.5);opacity:.6
 
 <script>
 // ── Storage ──
-const DB={get:k=>{try{return JSON.parse(localStorage.getItem(k))}catch{return null}},set:(k,v)=>localStorage.setItem(k,JSON.stringify(v))};
-const getUsers=()=>DB.get('users')||[];
-const saveUsers=u=>DB.set('users',u);
-const getBPs=()=>DB.get('bps')||[];
-const saveBPs=a=>DB.set('bps',a);
-const getDailys=()=>DB.get('dailys')||{};
-const saveDailys=o=>DB.set('dailys',o);
-let curUser=DB.get('curUser')||null;
-let editingUserId=null;
-let curPeriod='week';
+const DB = { get: k => { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } }, set: (k,v) => localStorage.setItem(k, JSON.stringify(v)) };
+const getUsers = () => DB.get('v2_users') || [];
+const saveUsers = u => DB.set('v2_users', u);
+const getBPs = () => DB.get('v2_bps') || [];
+const saveBPs = a => DB.set('v2_bps', a);
+const getDailys = () => DB.get('v2_dailys') || {};
+const saveDailys = o => DB.set('v2_dailys', o);
+let curUser = DB.get('v2_curUser') || null;
+let editingUid = null;
+let curPeriod = 'week';
 
-const pad=n=>String(n).padStart(2,'0');
-const nowTime=()=>{const n=new Date();return pad(n.getHours())+':'+pad(n.getMinutes());};
-const todayKey=()=>new Date().toISOString().slice(0,10);
-const timeDiff=(s,e)=>{if(!s||!e)return null;const[sh,sm]=s.split(':').map(Number),[eh,em]=e.split(':').map(Number);let d=(eh*60+em)-(sh*60+sm);if(d<=0)d+=1440;return(d/60).toFixed(1);};
-const avg=a=>a.length?(a.reduce((s,v)=>s+v,0)/a.length).toFixed(1):'—';
+const pad = n => String(n).padStart(2,'0');
+const nowTime = () => { const n = new Date(); return pad(n.getHours()) + ':' + pad(n.getMinutes()); };
+const todayKey = () => new Date().toISOString().slice(0,10);
+const avg = a => a.length ? (a.reduce((s,v)=>s+v,0)/a.length).toFixed(1) : '—';
+
+function timeDiff(s, e, eNext) {
+  if (!s || !e) return null;
+  const [sh,sm] = s.split(':').map(Number), [eh,em] = e.split(':').map(Number);
+  let d = (eh*60+em) - (sh*60+sm);
+  if (eNext) d += 1440;
+  else if (d < 0) d += 1440;
+  return (d/60).toFixed(1);
+}
 
 // ── BP Grade ──
-function bpGrade(high,low){
-  const h=parseFloat(high)||0,l=parseFloat(low)||0;
-  if(h>=180||l>=110)return{lv:4,label:'3级高血压',short:'重度',color:'var(--red)',bg:'var(--red2)',dot:'#ff4757'};
-  if(h>=160||l>=100)return{lv:3,label:'2级高血压',short:'中度',color:'var(--orange)',bg:'var(--orange2)',dot:'#ff9f43'};
-  if(h>=140||l>=90)return{lv:2,label:'1级高血压',short:'轻度',color:'var(--yellow)',bg:'var(--yellow2)',dot:'#ffd700'};
-  if(h>=120||l>=80)return{lv:1,label:'正常高值',short:'偏高',color:'var(--blue)',bg:'var(--blue2)',dot:'#3d9eff'};
-  return{lv:0,label:'正常血压',short:'正常',color:'var(--green)',bg:'var(--green2)',dot:'#2ed573'};
+function bpGrade(high, low) {
+  const h = parseFloat(high)||0, l = parseFloat(low)||0;
+  if (h >= 180 || l >= 110) return { lv:4, label:'3级高血压', short:'重度', color:'var(--red)', bg:'var(--red2)', dot:'#ff4757' };
+  if (h >= 160 || l >= 100) return { lv:3, label:'2级高血压', short:'中度', color:'var(--orange)', bg:'var(--orange2)', dot:'#ff9f43' };
+  if (h >= 140 || l >= 90) return { lv:2, label:'1级高血压', short:'轻度', color:'var(--yellow)', bg:'var(--yellow2)', dot:'#ffd32a' };
+  if (h >= 120 || l >= 80) return { lv:1, label:'正常高值', short:'偏高', color:'var(--blue)', bg:'var(--blue2)', dot:'#54a0ff' };
+  return { lv:0, label:'正常血压', short:'正常', color:'var(--green)', bg:'var(--green2)', dot:'#2ed573' };
 }
-function hrGrade(hr){
-  const h=parseFloat(hr)||0;
-  if(!h)return null;
-  if(h>100)return{label:'偏快',color:'var(--red)'};
-  if(h<60)return{label:'偏慢',color:'var(--blue)'};
-  return{label:'正常',color:'var(--green)'};
+function hrGrade(hr) {
+  const h = parseFloat(hr)||0;
+  if (!h) return null;
+  if (h > 100) return { label:'偏快', color:'var(--red)' };
+  if (h < 60) return { label:'偏慢', color:'var(--blue)' };
+  return { label:'正常', color:'var(--green)' };
 }
 
 // ── Init ──
-window.onload=()=>{
-  const now=new Date();
-  document.getElementById('today-lbl').textContent=now.toLocaleDateString('zh-CN',{year:'numeric',month:'long',day:'numeric',weekday:'long'});
-  document.getElementById('m-time').value=nowTime();
-  const users=getUsers();
-  if(!users.length){
-    // 引导添加第一个用户
-    setTimeout(()=>toast('👋 请先到「用户」页添加用户'),800);
-  } else {
-    if(!curUser||!users.find(u=>u.id===curUser)) curUser=users[0].id;
-    DB.set('curUser',curUser);
-  }
+window.onload = () => {
+  const now = new Date();
+  document.getElementById('today-lbl').textContent = now.toLocaleDateString('zh-CN', { year:'numeric', month:'long', day:'numeric', weekday:'long' });
+  document.getElementById('m-time').value = nowTime();
+  const users = getUsers();
+  if (!users.length) setTimeout(() => toast('👋 请先到「用户」页添加用户'), 800);
+  else { if (!curUser || !users.find(u=>u.id===curUser)) curUser = users[0].id; DB.set('v2_curUser', curUser); }
   renderHome();
 };
 
 // ── Nav ──
-function go(name,btn){
+function go(name, btn) {
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
   document.getElementById('pg-'+name).classList.add('active');
   btn.classList.add('on');
-  if(name==='history')renderHistory();
-  if(name==='stats')renderStats();
-  if(name==='profile')renderProfilePage();
-  document.getElementById('pg-'+name).scrollTop=0;
+  if (name==='history') renderHistory();
+  if (name==='stats') renderStats();
+  if (name==='profile') renderProfilePage();
+  document.getElementById('pg-'+name).scrollTop = 0;
 }
 
-function toast(msg){
-  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
-  clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2500);
-}
-function closeModal(id){document.getElementById(id).classList.remove('open');}
+function toast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('show'), 2500); }
+function closeMod(id) { document.getElementById(id).classList.remove('open'); }
 
 // ── Users ──
-function calcAge(b){if(!b)return null;const bd=new Date(b),now=new Date();let a=now.getFullYear()-bd.getFullYear();if(now.getMonth()-bd.getMonth()<0||(now.getMonth()===bd.getMonth()&&now.getDate()<bd.getDate()))a--;return a;}
-function userAvatar(u){
-  const colors=['linear-gradient(135deg,#ff4757,#ff6b81)','linear-gradient(135deg,#3d9eff,#74b9ff)','linear-gradient(135deg,#2ed573,#7bed9f)','linear-gradient(135deg,#ffd700,#fdcb6e)','linear-gradient(135deg,#a29bfe,#6c5ce7)','linear-gradient(135deg,#fd79a8,#e84393)'];
-  const idx=getUsers().findIndex(x=>x.id===u.id)%colors.length;
-  return{bg:colors[Math.max(0,idx)],icon:u.gender==='女'?'👩':u.gender==='男'?'👨':'🧑'};
+const avatarColors = ['linear-gradient(135deg,#ff4757,#ff6b81)','linear-gradient(135deg,#54a0ff,#74b9ff)','linear-gradient(135deg,#2ed573,#7bed9f)','linear-gradient(135deg,#ffd32a,#fdcb6e)','linear-gradient(135deg,#a29bfe,#6c5ce7)','linear-gradient(135deg,#fd79a8,#e84393)'];
+function uAvatar(u) { const i = getUsers().findIndex(x=>x.id===u.id)%avatarColors.length; return { bg: avatarColors[Math.max(0,i)], icon: u.gender==='女'?'👩':u.gender==='男'?'👨':'🧑' }; }
+function calcAge(b) { if(!b) return null; const bd=new Date(b),now=new Date(); let a=now.getFullYear()-bd.getFullYear(); if(now.getMonth()-bd.getMonth()<0||(now.getMonth()===bd.getMonth()&&now.getDate()<bd.getDate())) a--; return a; }
+
+function switchUser(uid) { curUser = uid; DB.set('v2_curUser', uid); renderHome(); renderUserBars(); }
+
+function renderUserBars() {
+  const users = getUsers();
+  const html = users.map(u => `<button class="uchip ${u.id===curUser?'on':''}" onclick="switchUser('${u.id}')">${u.gender==='女'?'👩':'👨'} ${u.name}</button>`).join('') + `<button class="uchip add" onclick="openAddUser()">＋ 添加</button>`;
+  ['user-bar','hist-user-bar','stats-user-bar'].forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML = html; });
 }
 
-function switchUser(uid){
-  curUser=uid;DB.set('curUser',uid);
-  renderHome();renderUserBars();
-}
-
-function renderUserBars(){
-  const users=getUsers();
-  ['user-bar','hist-user-bar','stats-user-bar'].forEach(id=>{
-    const el=document.getElementById(id);if(!el)return;
-    el.innerHTML=users.map(u=>`<button class="user-chip ${u.id===curUser?'on':''}" onclick="switchUser('${u.id}')">${u.gender==='女'?'👩':u.gender==='男'?'👨':'🧑'} ${u.name}</button>`).join('')+
-    `<button class="user-chip add-btn" onclick="openAddUser()">＋ 添加</button>`;
-  });
-}
-
-function openAddUser(){
-  editingUserId=null;
-  document.getElementById('user-modal-title').textContent='添加用户';
-  document.getElementById('del-user-btn').style.display='none';
-  ['u-name','u-job','u-birth'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('u-gender').value='';
+function openAddUser() {
+  editingUid = null;
+  document.getElementById('umod-title').textContent = '添加用户';
+  document.getElementById('del-user-btn').style.display = 'none';
+  ['u-name','u-job','u-birth'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('u-gender').value = '';
   document.getElementById('user-modal').classList.add('open');
 }
-function openEditUser(uid){
-  const u=getUsers().find(x=>x.id===uid);if(!u)return;
-  editingUserId=uid;
-  document.getElementById('user-modal-title').textContent='编辑用户';
-  document.getElementById('del-user-btn').style.display='block';
-  document.getElementById('u-name').value=u.name||'';
-  document.getElementById('u-gender').value=u.gender||'';
-  document.getElementById('u-job').value=u.job||'';
-  document.getElementById('u-birth').value=u.birth||'';
+function openEditUser(uid) {
+  const u = getUsers().find(x=>x.id===uid); if (!u) return;
+  editingUid = uid;
+  document.getElementById('umod-title').textContent = '编辑用户';
+  document.getElementById('del-user-btn').style.display = 'block';
+  document.getElementById('u-name').value = u.name||'';
+  document.getElementById('u-gender').value = u.gender||'';
+  document.getElementById('u-job').value = u.job||'';
+  document.getElementById('u-birth').value = u.birth||'';
   document.getElementById('user-modal').classList.add('open');
 }
-function saveUser(){
-  const name=document.getElementById('u-name').value.trim();
-  if(!name){toast('⚠️ 请输入姓名');return;}
-  const users=getUsers();
-  if(editingUserId){
-    const idx=users.findIndex(x=>x.id===editingUserId);
-    if(idx>=0){users[idx]={...users[idx],name,gender:document.getElementById('u-gender').value,job:document.getElementById('u-job').value.trim(),birth:document.getElementById('u-birth').value};}
+function saveUser() {
+  const name = document.getElementById('u-name').value.trim();
+  if (!name) { toast('⚠️ 请输入姓名'); return; }
+  const users = getUsers();
+  if (editingUid) {
+    const idx = users.findIndex(x=>x.id===editingUid);
+    if (idx >= 0) users[idx] = { ...users[idx], name, gender: document.getElementById('u-gender').value, job: document.getElementById('u-job').value.trim(), birth: document.getElementById('u-birth').value };
   } else {
-    const uid='u'+Date.now();
-    users.push({id:uid,name,gender:document.getElementById('u-gender').value,job:document.getElementById('u-job').value.trim(),birth:document.getElementById('u-birth').value});
-    if(!curUser){curUser=uid;DB.set('curUser',uid);}
+    const uid = 'u'+Date.now();
+    users.push({ id:uid, name, gender: document.getElementById('u-gender').value, job: document.getElementById('u-job').value.trim(), birth: document.getElementById('u-birth').value });
+    if (!curUser) { curUser = uid; DB.set('v2_curUser', uid); }
   }
-  saveUsers(users);closeModal('user-modal');toast('✅ 已保存');
-  renderHome();renderProfilePage();renderUserBars();
+  saveUsers(users); closeMod('user-modal'); toast('✅ 已保存');
+  renderHome(); renderProfilePage(); renderUserBars();
 }
-function deleteCurrentEditUser(){
-  if(!editingUserId)return;
-  if(!confirm('确认删除此用户？所有数据将保留但用户会被移除。'))return;
-  let users=getUsers().filter(x=>x.id!==editingUserId);
+function deleteUser() {
+  if (!editingUid) return;
+  const u = getUsers().find(x=>x.id===editingUid);
+  if (!u) return;
+  // 第一次确认
+  if (!confirm(`确认要注销「${u.name}」吗？\n\n⚠️ 用户信息将被删除，血压记录数据保留。\n\n点「确定」进入第二步确认。`)) return;
+  // 第二次确认：输入用户名
+  const input = prompt(`请输入用户名「${u.name}」来确认注销：`);
+  if (input === null) return; // 取消
+  if (input.trim() !== u.name) { alert(`❌ 用户名不匹配，注销已取消。`); return; }
+  let users = getUsers().filter(x=>x.id!==editingUid);
   saveUsers(users);
-  if(curUser===editingUserId) curUser=users.length?users[0].id:null;
-  DB.set('curUser',curUser);
-  closeModal('user-modal');toast('🗑️ 已删除');
-  renderHome();renderProfilePage();renderUserBars();
+  if (curUser === editingUid) curUser = users.length ? users[0].id : null;
+  DB.set('v2_curUser', curUser);
+  closeMod('user-modal'); toast('🗑️ 用户已注销');
+  renderHome(); renderProfilePage(); renderUserBars();
 }
 
-// ── Daily modal ──
-function openModal(){
-  const d=(getDailys()[curUser]||{})[todayKey()]||{};
-  document.getElementById('d-weight').value=d.weight||'';
-  document.getElementById('d-ws').value=d.ws||'';document.getElementById('d-we').value=d.we||'';
-  document.getElementById('d-ss').value=d.ss||'';document.getElementById('d-se').value=d.se||'';
+// ── Daily ──
+function openDailyModal() {
+  const d = ((getDailys()[curUser])||{})[todayKey()]||{};
+  document.getElementById('d-weight').value = d.weight||'';
+  document.getElementById('d-ws').value = d.ws||'';
+  document.getElementById('d-we').value = d.we||'';
+  document.getElementById('d-we-next').checked = d.weNext||false;
+  document.getElementById('d-ss').value = d.ss||'';
+  document.getElementById('d-se').value = d.se||'';
+  document.getElementById('d-se-next').checked = d.seNext||false;
   document.getElementById('daily-modal').classList.add('open');
 }
-function saveDaily(){
-  if(!curUser){toast('⚠️ 请先添加用户');return;}
-  const o=getDailys();if(!o[curUser])o[curUser]={};
-  o[curUser][todayKey()]={weight:document.getElementById('d-weight').value,ws:document.getElementById('d-ws').value,we:document.getElementById('d-we').value,ss:document.getElementById('d-ss').value,se:document.getElementById('d-se').value};
-  saveDailys(o);closeModal('daily-modal');toast('✅ 今日数据已保存');renderHome();
+function saveDaily() {
+  if (!curUser) { toast('⚠️ 请先添加用户'); return; }
+  const o = getDailys(); if (!o[curUser]) o[curUser] = {};
+  o[curUser][todayKey()] = {
+    weight: document.getElementById('d-weight').value,
+    ws: document.getElementById('d-ws').value, we: document.getElementById('d-we').value, weNext: document.getElementById('d-we-next').checked,
+    ss: document.getElementById('d-ss').value, se: document.getElementById('d-se').value, seNext: document.getElementById('d-se-next').checked
+  };
+  saveDailys(o); closeMod('daily-modal'); toast('✅ 今日数据已保存'); renderHome();
 }
 
 // ── Home ──
-function renderHome(){
+function renderHome() {
   renderUserBars();
-  const users=getUsers();
-  // Profile
-  const profEl=document.getElementById('home-prof');
-  if(!users.length){
-    profEl.innerHTML='<div style="color:var(--muted);font-size:14px;text-align:center;padding:8px 0">请到「用户」页添加用户 →</div>';
+  const users = getUsers();
+  const profEl = document.getElementById('home-prof');
+  if (!users.length) {
+    profEl.innerHTML = '<div style="color:var(--muted2);font-size:14px;text-align:center;padding:8px 0">请到「用户」页添加用户 →</div>';
   } else {
-    const u=users.find(x=>x.id===curUser)||users[0];
-    const age=calcAge(u.birth),av=userAvatar(u);
-    profEl.innerHTML=`<div class="prof-inner"><div class="avatar" style="background:${av.bg}">${av.icon}</div><div><div class="prof-name">${u.name}</div><div class="prof-meta">${u.gender||''}${u.job?' · '+u.job:''}</div>${age?`<div class="prof-age">🎂 ${age} 岁</div>`:''}</div><button onclick="openEditUser('${u.id}')" style="margin-left:auto;background:var(--s2);border:1px solid var(--bd);border-radius:9px;padding:5px 12px;font-size:12px;color:var(--muted);cursor:pointer">编辑</button></div>`;
+    const u = users.find(x=>x.id===curUser)||users[0];
+    const age = calcAge(u.birth), av = uAvatar(u);
+    profEl.innerHTML = `<div class="prof-inner"><div class="avatar" style="background:${av.bg}">${av.icon}</div><div style="flex:1"><div class="pname">${u.name}</div><div class="pmeta">${u.gender||''}${u.job?' · '+u.job:''}</div>${age?`<div style="font-size:11px;color:var(--yellow);margin-top:2px;font-weight:600">🎂 ${age} 岁</div>`:''}</div><button class="sbtn" onclick="openEditUser('${u.id}')">编辑</button></div>`;
   }
 
+  const today = todayKey();
+  const todayBPs = getBPs().filter(r=>r.uid===curUser&&r.date===today).sort((a,b)=>a.time>b.time?1:-1);
+
   // Alert
-  const alertEl=document.getElementById('alert-area');
-  const today=todayKey();
-  const todayBPs=getBPs().filter(r=>r.uid===curUser&&r.date===today).sort((a,b)=>a.time>b.time?1:-1);
-  // Check latest BP
-  alertEl.innerHTML='';
-  if(todayBPs.length){
-    const last=todayBPs[todayBPs.length-1];
-    const g=bpGrade(last.high,last.low);
-    if(g.lv>=2){
-      alertEl.innerHTML=`<div class="alert-banner" style="background:${g.bg};border:1px solid ${g.color};color:${g.color}"><span class="alert-icon">${g.lv>=3?'🚨':'⚠️'}</span><div><b>${g.label}</b>：最新高压 ${last.high||'—'}，低压 ${last.low||'—'}<br><span style="font-size:11px;opacity:.8">建议休息，必要时就医</span></div></div>`;
-    } else if(g.lv===1){
-      alertEl.innerHTML=`<div class="alert-banner" style="background:${g.bg};border:1px solid ${g.color};color:${g.color}"><span class="alert-icon">💙</span><div><b>${g.label}</b>：高压 ${last.high||'—'}，低压 ${last.low||'—'}<br><span style="font-size:11px;opacity:.8">注意休息，保持良好作息</span></div></div>`;
-    }
+  const alertEl = document.getElementById('alert-area');
+  alertEl.innerHTML = '';
+  if (todayBPs.length) {
+    const last = todayBPs[todayBPs.length-1];
+    const g = bpGrade(last.high, last.low);
+    if (g.lv >= 2) alertEl.innerHTML = `<div class="alert" style="background:${g.bg};border:1px solid ${g.color};color:${g.color}"><span class="alert-icon">${g.lv>=3?'🚨':'⚠️'}</span><div><div class="alert-title">${g.label}</div><div class="alert-sub">最新 高压${last.high||'?'} / 低压${last.low||'?'} · 建议休息，必要时就医</div></div></div>`;
+    else if (g.lv === 1) alertEl.innerHTML = `<div class="alert" style="background:${g.bg};border:1px solid ${g.color};color:${g.color}"><span class="alert-icon">💙</span><div><div class="alert-title">${g.label}</div><div class="alert-sub">注意休息，保持良好作息</div></div></div>`;
   }
 
   // Daily
-  const d=((getDailys()[curUser])||{})[today]||{};
-  const wh=timeDiff(d.ws,d.we),sh=timeDiff(d.ss,d.se);
-  document.getElementById('daily-card').innerHTML=`
+  const d = ((getDailys()[curUser])||{})[today]||{};
+  const wh = timeDiff(d.ws, d.we, d.weNext), sh = timeDiff(d.ss, d.se, d.seNext);
+  document.getElementById('daily-card').innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-      <div class="card-lbl" style="margin:0">今日数据</div>
-      <button class="edit-btn" onclick="openModal()">✏️ 编辑</button>
+      <div class="clbl" style="margin:0">今日数据</div>
+      <button class="sbtn" onclick="openDailyModal()">✏️ 编辑</button>
     </div>
-    <div class="daily-row"><div class="d-icon" style="background:rgba(46,213,115,0.12)">⚖️</div><div><div class="d-key">体重</div><div class="d-val">${d.weight?d.weight+' kg':'—'}</div></div></div>
-    <div class="daily-row"><div class="d-icon" style="background:rgba(255,215,0,0.1)">💼</div><div><div class="d-key">上班时间</div><div class="d-val">${d.ws&&d.we?d.ws+' → '+d.we:'—'}</div>${wh?`<div class="d-sub">时长 ${wh} 小时</div>`:''}</div></div>
-    <div class="daily-row"><div class="d-icon" style="background:rgba(61,158,255,0.12)">🌙</div><div><div class="d-key">睡觉时间</div><div class="d-val">${d.ss&&d.se?d.ss+' → '+d.se:'—'}</div>${sh?`<div class="d-sub">时长 ${sh} 小时</div>`:''}</div></div>`;
+    <div class="drow"><div class="dicon" style="background:rgba(46,213,115,0.1)">⚖️</div><div><div class="dkey">体重</div><div class="dval">${d.weight?d.weight+' kg':'—'}</div></div></div>
+    <div class="drow"><div class="dicon" style="background:rgba(255,211,42,0.1)">💼</div><div><div class="dkey">上班时间</div><div class="dval">${d.ws&&d.we?d.ws+' → '+d.we+(d.weNext?' (+1天)':''):'—'}</div>${wh?`<div class="dsub">时长 ${wh} 小时</div>`:''}</div></div>
+    <div class="drow"><div class="dicon" style="background:rgba(84,160,255,0.1)">🌙</div><div><div class="dkey">睡觉时间</div><div class="dval">${d.ss&&d.se?d.ss+' → '+d.se+(d.seNext?' (+1天)':''):'—'}</div>${sh?`<div class="dsub">时长 ${sh} 小时</div>`:''}</div></div>`;
 
-  // BP count badge
-  document.getElementById('bp-badge').textContent=`今日 ${todayBPs.length}/3`;
-
-  // Today BPs
-  const bpEl=document.getElementById('today-bps');
-  bpEl.innerHTML=todayBPs.length?todayBPs.map(r=>bpCardHTML(r,true)).join(''):'<div style="text-align:center;color:var(--muted);font-size:14px;padding:12px 0 6px">今天还没有血压记录</div>';
-
-  // Hide add box if 3 already
-  document.getElementById('add-box').style.display=todayBPs.length>=3?'none':'block';
-  if(todayBPs.length>=3){
-    document.getElementById('today-bps').insertAdjacentHTML('afterend','<div style="text-align:center;color:var(--muted);font-size:13px;padding:8px 0">今日已记录3次，明天继续 💪</div>');
-  }
+  document.getElementById('bp-badge').textContent = `今日 ${todayBPs.length}/3`;
+  document.getElementById('today-bps').innerHTML = todayBPs.length ? todayBPs.map(r=>bpHTML(r,true)).join('') : '<div style="text-align:center;color:var(--muted2);font-size:14px;padding:12px 0 6px">今天还没有血压记录</div>';
+  const addbox = document.getElementById('addbox');
+  if (todayBPs.length >= 3) { addbox.style.display = 'none'; document.getElementById('today-bps').insertAdjacentHTML('afterend','<div style="text-align:center;color:var(--muted2);font-size:13px;padding:6px 0">今日已记录3次，明天继续 💪</div>'); }
+  else addbox.style.display = 'block';
 }
 
-// ── BP card HTML ──
-function bpCardHTML(r,showDel){
-  const g=bpGrade(r.high,r.low),hr=hrGrade(r.hr);
-  return `<div class="bp-card">
-    <div class="bp-top">
-      <span class="bp-time">🕐 ${r.time||'—'}</span>
-      <span class="bp-badge" style="background:${g.bg};color:${g.color}">${g.short}</span>
-      ${hr?`<span class="bp-badge" style="background:rgba(255,255,255,0.06);color:${hr.color}">心率${hr.label}</span>`:''}
+// ── BP HTML ──
+function bpHTML(r, showDel) {
+  const g = bpGrade(r.high, r.low), hr = hrGrade(r.hr);
+  return `<div class="bpcard">
+    <div class="bptop">
+      <span class="bptime">🕐 ${r.time||'—'}</span>
+      <span class="badge" style="background:${g.bg};color:${g.color}">${g.short}</span>
+      ${hr?`<span class="badge" style="background:rgba(255,255,255,0.05);color:${hr.color}">心率${hr.label}</span>`:''}
     </div>
-    <div class="bp-vals">
-      <div class="bpv"><div class="bvk">高压</div><div class="bvv" style="color:${g.color}">${r.high||'—'}</div><div class="bvu">mmHg</div></div>
-      <div class="bpv"><div class="bvk">低压</div><div class="bvv" style="color:var(--blue)">${r.low||'—'}</div><div class="bvu">mmHg</div></div>
-      <div class="bpv"><div class="bvk">心率</div><div class="bvv" style="color:${hr?hr.color:'var(--text)'}">${r.hr||'—'}</div><div class="bvu">次/分</div></div>
+    <div class="bpgrid">
+      <div class="bpitem"><div class="bpk">高压</div><div class="bpv" style="color:${g.color}">${r.high||'—'}</div><div class="bpu">mmHg</div></div>
+      <div class="bpitem"><div class="bpk">低压</div><div class="bpv" style="color:var(--blue)">${r.low||'—'}</div><div class="bpu">mmHg</div></div>
+      <div class="bpitem"><div class="bpk">心率</div><div class="bpv" style="color:${hr?hr.color:'var(--text)'}">${r.hr||'—'}</div><div class="bpu">次/分</div></div>
     </div>
-    ${showDel?`<button class="del-btn" onclick="delBP(${r.id})">×</button>`:''}
+    ${showDel?`<button class="delbtn" onclick="delBP(${r.id})">×</button>`:''}
   </div>`;
 }
 
-function addBP(){
-  if(!curUser){toast('⚠️ 请先添加用户');return;}
-  const today=todayKey();
-  if(getBPs().filter(r=>r.uid===curUser&&r.date===today).length>=3){toast('⚠️ 今天已记录3次');return;}
-  const high=document.getElementById('m-high').value,low=document.getElementById('m-low').value,hr=document.getElementById('m-hr').value;
-  if(!high&&!low&&!hr){toast('⚠️ 请至少填写一项');return;}
-  const arr=[...getBPs(),{id:Date.now(),uid:curUser,date:today,time:document.getElementById('m-time').value,high,low,hr}];
+function addBP() {
+  if (!curUser) { toast('⚠️ 请先添加用户'); return; }
+  const today = todayKey();
+  if (getBPs().filter(r=>r.uid===curUser&&r.date===today).length >= 3) { toast('⚠️ 今天已记录3次'); return; }
+  const high = document.getElementById('m-high').value, low = document.getElementById('m-low').value, hr = document.getElementById('m-hr').value;
+  if (!high && !low && !hr) { toast('⚠️ 请至少填写一项'); return; }
+  const arr = [...getBPs(), { id:Date.now(), uid:curUser, date:today, time:document.getElementById('m-time').value, high, low, hr }];
   saveBPs(arr);
-  document.getElementById('m-high').value='';document.getElementById('m-low').value='';document.getElementById('m-hr').value='';
-  document.getElementById('m-time').value=nowTime();
-  // Alert check
-  const g=bpGrade(high,low);
-  if(g.lv>=3) toast('🚨 血压偏高！建议立即休息');
-  else if(g.lv===2) toast('⚠️ 血压偏高，注意休息');
+  ['m-high','m-low','m-hr'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('m-time').value = nowTime();
+  const g = bpGrade(high, low);
+  if (g.lv >= 3) toast('🚨 血压偏高！建议立即休息');
+  else if (g.lv === 2) toast('⚠️ 血压偏高，注意休息');
   else toast('✅ 已记录！');
   renderHome();
 }
-function delBP(id){
-  if(!confirm('确认删除？'))return;
-  saveBPs(getBPs().filter(r=>r.id!==id));toast('🗑️ 已删除');renderHome();
+function delBP(id) {
+  if (!confirm('确认删除？')) return;
+  saveBPs(getBPs().filter(r=>r.id!==id)); toast('🗑️ 已删除'); renderHome();
+}
+
+// ── OCR ──
+function triggerOCR() { document.getElementById('ocr-input').click(); }
+async function handleOCR(input) {
+  if (!input.files[0]) return;
+  const file = input.files[0];
+  document.getElementById('ocr-loading').style.display = 'block';
+  try {
+    const b64 = await new Promise((res,rej) => { const r=new FileReader(); r.onload=()=>res(r.result.split(',')[1]); r.onerror=rej; r.readAsDataURL(file); });
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 200,
+        messages: [{ role:'user', content:[
+          { type:'image', source:{ type:'base64', media_type:file.type, data:b64 } },
+          { type:'text', text:'这是一张血压计的照片。请识别图中显示的血压数值和心率数值，只返回JSON格式：{"high":"高压数值","low":"低压数值","hr":"心率数值"}，如果看不到某个数值就用空字符串。不要返回其他内容。' }
+        ]}]
+      })
+    });
+    const data = await resp.json();
+    const text = data.content?.[0]?.text||'';
+    const clean = text.replace(/```json|```/g,'').trim();
+    const parsed = JSON.parse(clean);
+    if (parsed.high) document.getElementById('m-high').value = parsed.high;
+    if (parsed.low) document.getElementById('m-low').value = parsed.low;
+    if (parsed.hr) document.getElementById('m-hr').value = parsed.hr;
+    toast('✅ 识别成功！请确认数值');
+  } catch(e) {
+    toast('⚠️ 识别失败，请手动输入');
+  }
+  document.getElementById('ocr-loading').style.display = 'none';
+  input.value = '';
 }
 
 // ── History ──
-function renderHistory(){
+function renderHistory() {
   renderUserBars();
-  const el=document.getElementById('history-content');
-  const bps=getBPs().filter(r=>r.uid===curUser).sort((a,b)=>{if(a.date!==b.date)return b.date>a.date?1:-1;return a.time>b.time?1:-1;});
-  const dailys=(getDailys()[curUser])||{};
-  const dates=[...new Set([...bps.map(r=>r.date),...Object.keys(dailys)])].sort((a,b)=>b>a?1:-1);
-  if(!dates.length){el.innerHTML='<div class="empty"><div class="ei">📭</div><div>暂无记录</div></div>';return;}
-  el.innerHTML=dates.map(date=>{
-    const d=dailys[date]||{},dayBPs=bps.filter(r=>r.date===date),wh=timeDiff(d.ws,d.we),sh=timeDiff(d.ss,d.se);
-    const dt=new Date(date+'T00:00:00'),now=new Date();now.setHours(0,0,0,0);
-    const diff=Math.round((now-dt)/86400000),wd=['日','一','二','三','四','五','六'][dt.getDay()];
-    const lbl=diff===0?'今天':diff===1?'昨天':`${date} 周${wd}`;
-    const dHtml=(d.weight||d.ws||d.ss)?`<div class="card" style="padding:11px 14px;margin-bottom:8px">
-      ${d.weight?`<div style="font-size:13px;margin-bottom:5px">⚖️ 体重 <b style="color:var(--green)">${d.weight} kg</b></div>`:''}
-      ${d.ws&&d.we?`<div style="font-size:13px;margin-bottom:5px">💼 上班 <b>${d.ws} → ${d.we}</b>${wh?` <span style="color:var(--muted);font-size:11px">${wh}h</span>`:''}</div>`:''}
-      ${d.ss&&d.se?`<div style="font-size:13px">🌙 睡觉 <b>${d.ss} → ${d.se}</b>${sh?` <span style="color:var(--muted);font-size:11px">${sh}h</span>`:''}</div>`:''}
-    </div>`:'';
-    return `<div class="day-g"><div class="day-hdr">${lbl}</div>${dHtml}${dayBPs.map(r=>bpCardHTML(r,false)).join('')}</div>`;
+  const el = document.getElementById('history-content');
+  const bps = getBPs().filter(r=>r.uid===curUser).sort((a,b)=>{ if(a.date!==b.date) return b.date>a.date?1:-1; return a.time>b.time?1:-1; });
+  const dailys = (getDailys()[curUser])||{};
+  const dates = [...new Set([...bps.map(r=>r.date),...Object.keys(dailys)])].sort((a,b)=>b>a?1:-1);
+  if (!dates.length) { el.innerHTML='<div class="empty"><div class="emptyicon">📭</div><div>暂无记录</div></div>'; return; }
+  el.innerHTML = dates.map(date => {
+    const d = dailys[date]||{}, dayBPs = bps.filter(r=>r.date===date);
+    const wh = timeDiff(d.ws,d.we,d.weNext), sh = timeDiff(d.ss,d.se,d.seNext);
+    const dt = new Date(date+'T00:00:00'), now = new Date(); now.setHours(0,0,0,0);
+    const diff = Math.round((now-dt)/86400000), wd=['日','一','二','三','四','五','六'][dt.getDay()];
+    const lbl = diff===0?'今天':diff===1?'昨天':`${date} 周${wd}`;
+    const dHtml = (d.weight||d.ws||d.ss)?`<div class="card" style="padding:11px 14px;margin-bottom:8px">
+      ${d.weight?`<div style="font-size:13px;margin-bottom:5px">⚖️ 体重 <b style="color:var(--green);font-family:'DM Mono',monospace">${d.weight} kg</b></div>`:''}
+      ${d.ws&&d.we?`<div style="font-size:13px;margin-bottom:5px">💼 上班 <b style="font-family:'DM Mono',monospace">${d.ws} → ${d.we}${d.weNext?' (+1天)':''}</b>${wh?` <span style="color:var(--muted);font-size:11px">${wh}h</span>`:''}</div>`:''}
+      ${d.ss&&d.se?`<div style="font-size:13px">🌙 睡觉 <b style="font-family:'DM Mono',monospace">${d.ss} → ${d.se}${d.seNext?' (+1天)':''}</b>${sh?` <span style="color:var(--muted);font-size:11px">${sh}h</span>`:''}</div>`:''}
+    </div>` : '';
+    return `<div class="dayg"><div class="dayhdr">${lbl}</div>${dHtml}${dayBPs.map(r=>bpHTML(r,false)).join('')}</div>`;
   }).join('');
 }
 
 // ── Stats ──
-function setPeriod(p,btn){curPeriod=p;document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));btn.classList.add('on');renderStats();}
-function renderStats(){
+function setPeriod(p, btn) { curPeriod = p; document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on')); btn.classList.add('on'); renderStats(); }
+function renderStats() {
   renderUserBars();
-  const el=document.getElementById('stats-content');
-  const bps=getBPs().filter(r=>r.uid===curUser);
-  const dailys=(getDailys()[curUser])||{};
-  const now=new Date();
-  function inP(d){const diff=(now-new Date(d+'T00:00:00'))/86400000;if(curPeriod==='week')return diff<=7;if(curPeriod==='month')return diff<=30;if(curPeriod==='quarter')return diff<=90;return true;}
-  const fb=bps.filter(r=>inP(r.date)),fd=Object.keys(dailys).filter(inP);
-  if(!fb.length&&!fd.length){el.innerHTML='<div class="empty"><div class="ei">📊</div><div>该时间段暂无数据</div></div>';return;}
-  const highs=fb.filter(r=>r.high).map(r=>+r.high),lows=fb.filter(r=>r.low).map(r=>+r.low),hrs=fb.filter(r=>r.hr).map(r=>+r.hr);
+  const el = document.getElementById('stats-content');
+  const bps = getBPs().filter(r=>r.uid===curUser);
+  const dailys = (getDailys()[curUser])||{};
+  const now = new Date();
+  function inP(d) { const diff=(now-new Date(d+'T00:00:00'))/86400000; if(curPeriod==='week') return diff<=7; if(curPeriod==='month') return diff<=30; if(curPeriod==='quarter') return diff<=90; return true; }
+  const fb = bps.filter(r=>inP(r.date)), fd = Object.keys(dailys).filter(inP);
+  if (!fb.length && !fd.length) { el.innerHTML='<div class="empty"><div class="emptyicon">📊</div><div>该时间段暂无数据</div></div>'; return; }
+  const highs=fb.filter(r=>r.high).map(r=>+r.high), lows=fb.filter(r=>r.low).map(r=>+r.low), hrs=fb.filter(r=>r.hr).map(r=>+r.hr);
   const weights=fd.filter(d=>dailys[d]?.weight).map(d=>+dailys[d].weight);
-  const sleeps=fd.filter(d=>dailys[d]?.ss&&dailys[d]?.se).map(d=>+timeDiff(dailys[d].ss,dailys[d].se));
-  const maxV=a=>a.length?Math.max(...a).toFixed(0):'—',minV=a=>a.length?Math.min(...a).toFixed(0):'—';
+  const sleeps=fd.filter(d=>dailys[d]?.ss&&dailys[d]?.se).map(d=>+timeDiff(dailys[d].ss,dailys[d].se,dailys[d].seNext));
+  const maxV=a=>a.length?Math.max(...a).toFixed(0):'—', minV=a=>a.length?Math.min(...a).toFixed(0):'—';
   const cDates=[...new Set(fb.map(r=>r.date))].sort().slice(-14);
   function dAvg(date,f){const v=fb.filter(r=>r.date===date&&r[f]).map(r=>+r[f]);return v.length?v.reduce((a,b)=>a+b,0)/v.length:null;}
-  function chart(data,color){
-    const vals=data.map(d=>d.v),mx=Math.max(...vals.filter(Boolean))||1,mn=Math.min(...vals.filter(Boolean))||0,rng=mx-mn||1;
-    return '<div class="bars">'+data.map(d=>{const p=d.v?((d.v-mn)/rng*60+15):4;return`<div class="bw"><div class="b" style="height:${p}%;background:${d.v?color:'rgba(255,255,255,0.05)'}"></div><div class="bl">${d.l}</div></div>`;}).join('')+'</div>';
-  }
+  function chart(data,color){const vals=data.map(d=>d.v),mx=Math.max(...vals.filter(Boolean))||1,mn=Math.min(...vals.filter(Boolean))||0,rng=mx-mn||1;return '<div class="bars">'+data.map(d=>{const p=d.v?((d.v-mn)/rng*60+15):4;return`<div class="bw"><div class="bar" style="height:${p}%;background:${d.v?color:'rgba(255,255,255,0.04)'}"></div><div class="barlbl">${d.l}</div></div>`;}).join('')+'</div>';}
   const wDates=fd.filter(d=>dailys[d]?.weight).sort().slice(-14);
-  const avgHigh=avg(highs);
-  const avgGrade=avgHigh!=='—'?bpGrade(avgHigh,avg(lows)):null;
-
+  const avgHigh=avg(highs), avgGrade=avgHigh!=='—'?bpGrade(avgHigh,avg(lows)):null;
   el.innerHTML=`
-    ${avgGrade&&avgGrade.lv>=1?`<div class="alert-banner" style="background:${avgGrade.bg};border:1px solid ${avgGrade.color};color:${avgGrade.color};margin-bottom:12px"><span class="alert-icon">📊</span><div>平均血压等级：<b>${avgGrade.label}</b><br><span style="font-size:11px;opacity:.8">高压均值 ${avgHigh} mmHg</span></div></div>`:''}
-    <div class="stats-g">
-      <div class="stat-card"><div class="sv" style="color:var(--red)">${avg(highs)}</div><div class="sl">平均高压 mmHg</div></div>
-      <div class="stat-card"><div class="sv" style="color:var(--blue)">${avg(lows)}</div><div class="sl">平均低压 mmHg</div></div>
-      <div class="stat-card"><div class="sv" style="color:var(--red)">${avg(hrs)}</div><div class="sl">平均心率 次/分</div></div>
-      <div class="stat-card"><div class="sv" style="color:var(--green)">${avg(weights)}</div><div class="sl">平均体重 kg</div></div>
-      <div class="stat-card"><div class="sv">${maxV(highs)} / ${minV(highs)}</div><div class="sl">高压 最高/最低</div></div>
-      <div class="stat-card"><div class="sv" style="color:var(--blue)">${avg(sleeps)}</div><div class="sl">平均睡眠 h</div></div>
+    ${avgGrade&&avgGrade.lv>=1?`<div class="alert" style="background:${avgGrade.bg};border:1px solid ${avgGrade.color};color:${avgGrade.color};margin-bottom:10px"><span class="alert-icon">📊</span><div><div class="alert-title">平均：${avgGrade.label}</div><div class="alert-sub">高压均值 ${avgHigh} mmHg</div></div></div>`:''}
+    <div class="sg">
+      <div class="sc"><div class="sv" style="color:var(--red)">${avg(highs)}</div><div class="sl">平均高压 mmHg</div></div>
+      <div class="sc"><div class="sv" style="color:var(--blue)">${avg(lows)}</div><div class="sl">平均低压 mmHg</div></div>
+      <div class="sc"><div class="sv" style="color:var(--red)">${avg(hrs)}</div><div class="sl">平均心率 次/分</div></div>
+      <div class="sc"><div class="sv" style="color:var(--green)">${avg(weights)}</div><div class="sl">平均体重 kg</div></div>
+      <div class="sc"><div class="sv">${maxV(highs)}/${minV(highs)}</div><div class="sl">高压 最高/最低</div></div>
+      <div class="sc"><div class="sv" style="color:var(--blue)">${avg(sleeps)}</div><div class="sl">平均睡眠 h</div></div>
     </div>
     <div class="grade-ref">
       <div style="font-size:10px;font-weight:700;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:8px">血压分级参考</div>
-      ${[['#2ed573','正常 <120/<80'],['#3d9eff','正常高值 120-139/80-89'],['#ffd700','1级 140-159/90-99'],['#ff9f43','2级 160-179/100-109'],['#ff4757','3级 ≥180/≥110']].map(([c,l])=>`<div class="grade-row"><div class="grade-dot" style="background:${c}"></div><span style="color:var(--muted)">${l}</span></div>`).join('')}
+      ${[['#2ed573','正常 <120/<80'],['#54a0ff','正常高值 120-139/80-89'],['#ffd32a','1级 140-159/90-99'],['#ff9f43','2级 160-179/100-109'],['#ff4757','3级 ≥180/≥110']].map(([c,l])=>`<div class="grade-row"><div class="gdot" style="background:${c}"></div><span>${l}</span></div>`).join('')}
     </div>
-    ${highs.length>1?`<div class="chart-card"><div class="ct">📈 高压趋势</div>${chart(cDates.map(d=>({v:dAvg(d,'high'),l:d.slice(5)})),'var(--red)')}</div>`:''}
-    ${hrs.length>1?`<div class="chart-card"><div class="ct">❤️ 心率趋势</div>${chart(cDates.map(d=>({v:dAvg(d,'hr'),l:d.slice(5)})),'#ff6b81')}</div>`:''}
-    ${weights.length>1?`<div class="chart-card"><div class="ct">⚖️ 体重趋势</div>${chart(wDates.map(d=>({v:+dailys[d].weight,l:d.slice(5)})),'var(--green)')}</div>`:''}
-    ${sleeps.length>1?`<div class="chart-card"><div class="ct">🌙 睡眠趋势</div>${chart(fd.filter(d=>dailys[d]?.ss&&dailys[d]?.se).sort().slice(-14).map(d=>({v:+timeDiff(dailys[d].ss,dailys[d].se),l:d.slice(5)})),'var(--blue)')}</div>`:''}`;
+    ${highs.length>1?`<div class="cc"><div class="ct">📈 高压趋势</div>${chart(cDates.map(d=>({v:dAvg(d,'high'),l:d.slice(5)})),'var(--red)')}</div>`:''}
+    ${hrs.length>1?`<div class="cc"><div class="ct">❤️ 心率趋势</div>${chart(cDates.map(d=>({v:dAvg(d,'hr'),l:d.slice(5)})),'#ff6b81')}</div>`:''}
+    ${weights.length>1?`<div class="cc"><div class="ct">⚖️ 体重趋势</div>${chart(wDates.map(d=>({v:+dailys[d].weight,l:d.slice(5)})),'var(--green)')}</div>`:''}
+    ${sleeps.length>1?`<div class="cc"><div class="ct">🌙 睡眠趋势</div>${chart(fd.filter(d=>dailys[d]?.ss&&dailys[d]?.se).sort().slice(-14).map(d=>({v:+timeDiff(dailys[d].ss,dailys[d].se,dailys[d].seNext),l:d.slice(5)})),'var(--blue)')}</div>`:''}`;
 }
 
-// ── Profile page ──
-function renderProfilePage(){
-  const users=getUsers();
-  const el=document.getElementById('profile-content');
-  if(!users.length){
-    el.innerHTML=`<div class="empty"><div class="ei">👥</div><div>还没有用户</div></div><div style="padding:0 0 12px"><button class="btn btn-red" onclick="openAddUser()">＋ 添加第一个用户</button></div>`;
-    return;
-  }
-  el.innerHTML=users.map(u=>{
-    const age=calcAge(u.birth),av=userAvatar(u);
+// ── Profile ──
+function renderProfilePage() {
+  const users = getUsers(), el = document.getElementById('profile-content');
+  if (!users.length) { el.innerHTML=`<div class="empty"><div class="emptyicon">👥</div><div>还没有用户</div></div><div style="padding:0 0 12px"><button class="btn btn-red" onclick="openAddUser()">＋ 添加第一个用户</button></div>`; return; }
+  el.innerHTML = users.map(u => {
+    const age=calcAge(u.birth), av=uAvatar(u);
     return `<div class="card" style="cursor:pointer" onclick="openEditUser('${u.id}')">
       <div class="prof-inner">
-        <div class="avatar" style="background:${av.bg};width:46px;height:46px;font-size:22px">${av.icon}</div>
-        <div><div class="prof-name" style="font-size:16px">${u.name}</div><div class="prof-meta">${u.gender||''}${age?' · '+age+' 岁':''}${u.job?' · '+u.job:''}</div></div>
-        <div style="margin-left:auto;color:var(--muted);font-size:18px">›</div>
+        <div class="avatar" style="background:${av.bg};width:44px;height:44px;font-size:20px">${av.icon}</div>
+        <div style="flex:1"><div class="pname" style="font-size:15px">${u.name}</div><div class="pmeta">${u.gender||''}${age?' · '+age+' 岁':''}${u.job?' · '+u.job:''}</div></div>
+        <div style="color:var(--muted2);font-size:18px">›</div>
       </div>
     </div>`;
-  }).join('')+`<button class="btn btn-ghost" onclick="openAddUser()">＋ 添加用户</button>`;
-}
-</script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<title>拜拜高血压</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-<style>
-:root{
-  --bg:#0a0a0f;--s1:#13131a;--s2:#1c1c26;--bd:rgba(255,255,255,0.07);
-  --text:#f0f0f8;--muted:#6b6b88;
-  --red:#ff4757;--red2:rgba(255,71,87,0.15);
-  --orange:#ff9f43;--orange2:rgba(255,159,67,0.15);
-  --yellow:#ffd700;--yellow2:rgba(255,215,0,0.12);
-  --green:#2ed573;--green2:rgba(46,213,115,0.12);
-  --blue:#3d9eff;--blue2:rgba(61,158,255,0.12);
-  --purple:#a29bfe;
-  --r:18px;
-}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;overflow:hidden}
-body{background:var(--bg);color:var(--text);font-family:'Noto Sans SC',-apple-system,sans-serif;font-size:15px;position:fixed;width:100%;height:100%}
-
-.page{display:none;position:absolute;inset:0;overflow-y:auto;padding-bottom:90px}
-.page.active{display:block}
-
-/* Header */
-.hdr{padding:52px 18px 14px;background:linear-gradient(180deg,var(--bg) 60%,transparent);position:sticky;top:0;z-index:10;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
-.hdr-row{display:flex;justify-content:space-between;align-items:center}
-.hdr-title{font-size:24px;font-weight:900;letter-spacing:-0.5px;background:linear-gradient(135deg,#fff 30%,#888);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.hdr-sub{font-size:11px;color:var(--muted);margin-top:3px}
-
-/* Cards */
-.content{padding:0 16px 16px}
-.card{background:var(--s1);border:1px solid var(--bd);border-radius:var(--r);padding:16px 18px;margin-bottom:12px;position:relative;overflow:hidden}
-.card::before{content:'';position:absolute;inset:0;border-radius:var(--r);background:linear-gradient(135deg,rgba(255,255,255,0.025) 0%,transparent 60%);pointer-events:none}
-.card-lbl{font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-bottom:14px}
-
-/* Forms */
-.field{margin-bottom:12px}
-.f-lbl{font-size:12px;color:var(--muted);margin-bottom:5px}
-input,select{width:100%;background:var(--s2);border:1px solid var(--bd);border-radius:11px;color:var(--text);font-family:'Noto Sans SC',-apple-system,sans-serif;font-size:16px;padding:11px 13px;outline:none;-webkit-appearance:none;appearance:none;transition:border-color .2s}
-input:focus,select:focus{border-color:var(--red)}
-select option{background:#1c1c26}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-.trow{display:flex;align-items:center;gap:8px}
-.tsep{color:var(--muted);font-size:13px;flex-shrink:0}
-.hint{font-size:10px;color:var(--muted);text-align:center;margin-top:4px}
-
-/* Buttons */
-.btn{width:100%;padding:14px;border:none;border-radius:13px;font-family:'Noto Sans SC',-apple-system,sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:opacity .2s,transform .1s}
-.btn:active{opacity:.85;transform:scale(.99)}
-.btn-red{background:linear-gradient(135deg,#ff4757,#ff3742);color:#fff;box-shadow:0 4px 20px rgba(255,71,87,0.3)}
-.btn-ghost{background:var(--s2);color:var(--text);border:1px solid var(--bd);margin-top:8px}
-
-/* Bottom nav */
-.bnav{position:fixed;bottom:0;left:0;right:0;background:rgba(10,10,15,0.96);border-top:1px solid var(--bd);display:flex;padding:10px 0 28px;z-index:100;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
-.nb{flex:1;background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 0;cursor:pointer;font-family:'Noto Sans SC',-apple-system,sans-serif;font-size:10px;color:var(--muted);transition:color .2s}
-.nb.on{color:var(--red)}
-.nb-i{font-size:22px}
-
-/* User selector */
-.user-bar{display:flex;align-items:center;gap:8px;margin-bottom:14px;overflow-x:auto;padding-bottom:2px}
-.user-bar::-webkit-scrollbar{display:none}
-.user-chip{background:var(--s2);border:1px solid var(--bd);border-radius:100px;padding:6px 14px;font-size:13px;color:var(--muted);cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .2s}
-.user-chip.on{background:var(--red);border-color:var(--red);color:#fff;font-weight:700}
-.user-chip.add-btn{border-style:dashed;color:var(--muted)}
-
-/* Profile card */
-.prof-card{background:linear-gradient(135deg,#1a1025,#0d1525);border:1px solid rgba(162,155,254,0.15)}
-.prof-inner{display:flex;align-items:center;gap:14px}
-.avatar{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;box-shadow:0 4px 16px rgba(0,0,0,0.4)}
-.prof-name{font-size:18px;font-weight:700}
-.prof-meta{font-size:12px;color:var(--muted);margin-top:3px}
-.prof-age{font-size:11px;color:var(--yellow);margin-top:3px;font-weight:600}
-
-/* Daily rows */
-.daily-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--bd)}
-.daily-row:last-child{border-bottom:none;padding-bottom:0}
-.daily-row:first-child{padding-top:0}
-.d-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
-.d-key{font-size:11px;color:var(--muted);margin-bottom:2px}
-.d-val{font-size:14px;font-weight:500}
-.d-sub{font-size:11px;color:var(--muted);margin-top:1px}
-.edit-btn{margin-left:auto;background:var(--s2);border:1px solid var(--bd);border-radius:9px;padding:5px 12px;font-size:12px;color:var(--muted);cursor:pointer;flex-shrink:0;font-family:inherit}
-
-/* BP cards */
-.bp-card{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:13px 15px;margin-bottom:9px;position:relative}
-.bp-top{display:flex;align-items:center;gap:8px;margin-bottom:11px}
-.bp-time{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
-.bp-badge{padding:2px 9px;border-radius:100px;font-size:10px;font-weight:700;letter-spacing:.3px}
-.bp-vals{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0}
-.bpv{text-align:center;padding:0 6px}
-.bpv+.bpv{border-left:1px solid var(--bd)}
-.bvk{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:.3px}
-.bvv{font-size:22px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
-.bvu{font-size:10px;color:var(--muted);margin-top:2px}
-.del-btn{position:absolute;top:10px;right:10px;background:none;border:none;color:rgba(255,255,255,0.15);font-size:20px;cursor:pointer;padding:2px 5px;border-radius:7px}
-.del-btn:active{color:var(--red)}
-
-/* Alert banner */
-.alert-banner{border-radius:12px;padding:10px 14px;margin-bottom:10px;display:flex;align-items:center;gap:10px;font-size:13px;font-weight:500}
-.alert-icon{font-size:20px;flex-shrink:0}
-
-/* Add box */
-.add-box{background:linear-gradient(135deg,rgba(255,71,87,0.08),rgba(255,71,87,0.03));border:1px solid rgba(255,71,87,0.2);border-radius:var(--r);padding:15px 16px;margin-bottom:12px}
-.add-lbl{font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--red);text-transform:uppercase;margin-bottom:13px}
-
-/* Stats */
-.stats-g{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
-.stat-card{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:14px;text-align:center}
-.sv{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1;margin-bottom:5px}
-.sl{font-size:11px;color:var(--muted)}
-.chart-card{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:14px;margin-bottom:12px}
-.ct{font-size:10px;font-weight:700;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:12px}
-.bars{display:flex;align-items:flex-end;gap:4px;height:75px}
-.bw{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:3px;height:100%}
-.b{width:100%;border-radius:3px 3px 0 0;min-height:3px;transition:height .5s cubic-bezier(.34,1.2,.64,1)}
-.bl{font-size:8px;color:var(--muted);font-variant-numeric:tabular-nums}
-
-/* Tabs */
-.tabs{display:flex;gap:6px;margin-top:10px;overflow-x:auto;padding-bottom:2px}
-.tabs::-webkit-scrollbar{display:none}
-.tab{background:var(--s2);border:1px solid var(--bd);border-radius:100px;padding:6px 14px;font-size:12px;color:var(--muted);cursor:pointer;white-space:nowrap;flex-shrink:0;font-family:inherit;font-weight:500}
-.tab.on{background:var(--red);border-color:var(--red);color:#fff;font-weight:700}
-
-/* History */
-.day-g{margin-bottom:20px}
-.day-hdr{font-size:11px;font-weight:700;color:var(--muted);margin-bottom:9px;padding:0 2px;display:flex;align-items:center;gap:8px}
-.day-hdr::after{content:'';flex:1;height:1px;background:var(--bd)}
-
-/* Sec title */
-.sec{font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;padding:4px 2px 9px;display:flex;align-items:center;justify-content:space-between}
-
-/* Modal */
-.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;align-items:flex-end;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
-.modal-bg.open{display:flex}
-.modal{background:var(--s1);border-radius:22px 22px 0 0;padding:22px 16px 44px;width:100%;max-height:88vh;overflow-y:auto;border-top:1px solid var(--bd)}
-.modal-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
-.modal-title{font-size:17px;font-weight:700}
-.modal-close{background:var(--s2);border:1px solid var(--bd);border-radius:9px;padding:5px 13px;font-size:13px;color:var(--muted);cursor:pointer;font-family:inherit}
-
-/* Empty */
-.empty{text-align:center;padding:50px 20px;color:var(--muted)}
-.ei{font-size:46px;margin-bottom:10px;opacity:.3}
-
-/* Toast */
-.toast{position:fixed;bottom:98px;left:50%;transform:translateX(-50%) translateY(8px);background:rgba(255,255,255,0.1);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.15);color:#fff;padding:10px 20px;border-radius:100px;font-size:14px;font-weight:500;opacity:0;transition:all .3s;pointer-events:none;z-index:999;white-space:nowrap}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-
-/* BP grade reference */
-.grade-ref{border-radius:12px;padding:12px 14px;background:var(--s2);margin-bottom:12px}
-.grade-row{display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid var(--bd);font-size:12px}
-.grade-row:last-child{border-bottom:none}
-.grade-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-
-input[type=date]::-webkit-calendar-picker-indicator,
-input[type=time]::-webkit-calendar-picker-indicator{filter:invert(.5);opacity:.6}
-</style>
-</head>
-<body>
-
-<!-- 首页 -->
-<div class="page active" id="pg-home">
-  <div class="hdr">
-    <div class="hdr-row">
-      <div><div class="hdr-title">拜拜高血压</div><div class="hdr-sub" id="today-lbl"></div></div>
-      <div id="bp-badge" style="background:var(--red2);border:1px solid rgba(255,71,87,0.3);border-radius:100px;padding:5px 13px;font-size:12px;color:var(--red);font-weight:600">今日 0/3</div>
-    </div>
-    <!-- 用户切换 -->
-    <div class="user-bar" id="user-bar" style="margin-top:12px"></div>
-  </div>
-  <div class="content">
-    <div class="card prof-card" id="home-prof"></div>
-    <div id="alert-area"></div>
-    <div class="card" id="daily-card"></div>
-    <div class="sec">今日血压记录</div>
-    <div id="today-bps"></div>
-    <div class="add-box" id="add-box">
-      <div class="add-lbl">＋ 添加测量</div>
-      <div class="field"><div class="f-lbl">测量时间</div><input type="time" id="m-time"></div>
-      <div class="field">
-        <div class="f-lbl">高压 · 低压 · 心率</div>
-        <div class="g3">
-          <div><input type="number" id="m-high" placeholder="高压"><div class="hint">mmHg</div></div>
-          <div><input type="number" id="m-low" placeholder="低压"><div class="hint">mmHg</div></div>
-          <div><input type="number" id="m-hr" placeholder="心率"><div class="hint">次/分</div></div>
-        </div>
-      </div>
-      <button class="btn btn-red" onclick="addBP()">记录这次测量</button>
-    </div>
-  </div>
-</div>
-
-<!-- 历史 -->
-<div class="page" id="pg-history">
-  <div class="hdr">
-    <div class="hdr-row"><div class="hdr-title">历史记录</div></div>
-    <div class="user-bar" id="hist-user-bar" style="margin-top:12px"></div>
-  </div>
-  <div class="content" id="history-content"></div>
-</div>
-
-<!-- 统计 -->
-<div class="page" id="pg-stats">
-  <div class="hdr">
-    <div class="hdr-title">数据统计</div>
-    <div class="user-bar" id="stats-user-bar" style="margin-top:10px"></div>
-    <div class="tabs">
-      <button class="tab on" onclick="setPeriod('week',this)">近7天</button>
-      <button class="tab" onclick="setPeriod('month',this)">近1个月</button>
-      <button class="tab" onclick="setPeriod('quarter',this)">近3个月</button>
-      <button class="tab" onclick="setPeriod('all',this)">全部</button>
-    </div>
-  </div>
-  <div class="content" id="stats-content"></div>
-</div>
-
-<!-- 我的 -->
-<div class="page" id="pg-profile">
-  <div class="hdr"><div class="hdr-title">用户管理</div></div>
-  <div class="content" id="profile-content"></div>
-</div>
-
-<!-- 底部导航 -->
-<nav class="bnav">
-  <button class="nb on" onclick="go('home',this)"><span class="nb-i">🏠</span>首页</button>
-  <button class="nb" onclick="go('history',this)"><span class="nb-i">📋</span>历史</button>
-  <button class="nb" onclick="go('stats',this)"><span class="nb-i">📊</span>统计</button>
-  <button class="nb" onclick="go('profile',this)"><span class="nb-i">👥</span>用户</button>
-</nav>
-
-<!-- 每日数据弹窗 -->
-<div class="modal-bg" id="daily-modal">
-  <div class="modal">
-    <div class="modal-hdr">
-      <div class="modal-title">今日基本数据</div>
-      <button class="modal-close" onclick="closeModal('daily-modal')">完成</button>
-    </div>
-    <div class="field"><div class="f-lbl">⚖️ 体重（kg）</div><input type="number" id="d-weight" placeholder="例如 65.5" step="0.1"></div>
-    <div class="field"><div class="f-lbl">💼 上班时间</div>
-      <div class="trow"><input type="time" id="d-ws"><span class="tsep">→</span><input type="time" id="d-we"></div>
-    </div>
-    <div class="field"><div class="f-lbl">🌙 睡觉时间</div>
-      <div class="trow"><input type="time" id="d-ss"><span class="tsep">→</span><input type="time" id="d-se"></div>
-    </div>
-    <button class="btn btn-red" onclick="saveDaily()" style="margin-top:8px">保存</button>
-  </div>
-</div>
-
-<!-- 添加/编辑用户弹窗 -->
-<div class="modal-bg" id="user-modal">
-  <div class="modal">
-    <div class="modal-hdr">
-      <div class="modal-title" id="user-modal-title">添加用户</div>
-      <button class="modal-close" onclick="closeModal('user-modal')">取消</button>
-    </div>
-    <div class="field"><div class="f-lbl">姓名</div><input type="text" id="u-name" placeholder="请输入姓名"></div>
-    <div class="g2" style="margin-bottom:12px">
-      <div><div class="f-lbl">性别</div><select id="u-gender"><option value="">请选择</option><option value="男">男</option><option value="女">女</option></select></div>
-      <div><div class="f-lbl">职业</div><input type="text" id="u-job" placeholder="职业"></div>
-    </div>
-    <div class="field"><div class="f-lbl">出生年月日</div><input type="date" id="u-birth"></div>
-    <button class="btn btn-red" onclick="saveUser()" style="margin-top:8px">保存</button>
-    <button class="btn btn-ghost" id="del-user-btn" onclick="deleteCurrentEditUser()" style="display:none">删除此用户</button>
-  </div>
-</div>
-
-<div class="toast" id="toast"></div>
-
-<script>
-// ── Storage ──
-const DB={get:k=>{try{return JSON.parse(localStorage.getItem(k))}catch{return null}},set:(k,v)=>localStorage.setItem(k,JSON.stringify(v))};
-const getUsers=()=>DB.get('users')||[];
-const saveUsers=u=>DB.set('users',u);
-const getBPs=()=>DB.get('bps')||[];
-const saveBPs=a=>DB.set('bps',a);
-const getDailys=()=>DB.get('dailys')||{};
-const saveDailys=o=>DB.set('dailys',o);
-let curUser=DB.get('curUser')||null;
-let editingUserId=null;
-let curPeriod='week';
-
-const pad=n=>String(n).padStart(2,'0');
-const nowTime=()=>{const n=new Date();return pad(n.getHours())+':'+pad(n.getMinutes());};
-const todayKey=()=>new Date().toISOString().slice(0,10);
-const timeDiff=(s,e)=>{if(!s||!e)return null;const[sh,sm]=s.split(':').map(Number),[eh,em]=e.split(':').map(Number);let d=(eh*60+em)-(sh*60+sm);if(d<=0)d+=1440;return(d/60).toFixed(1);};
-const avg=a=>a.length?(a.reduce((s,v)=>s+v,0)/a.length).toFixed(1):'—';
-
-// ── BP Grade ──
-function bpGrade(high,low){
-  const h=parseFloat(high)||0,l=parseFloat(low)||0;
-  if(h>=180||l>=110)return{lv:4,label:'3级高血压',short:'重度',color:'var(--red)',bg:'var(--red2)',dot:'#ff4757'};
-  if(h>=160||l>=100)return{lv:3,label:'2级高血压',short:'中度',color:'var(--orange)',bg:'var(--orange2)',dot:'#ff9f43'};
-  if(h>=140||l>=90)return{lv:2,label:'1级高血压',short:'轻度',color:'var(--yellow)',bg:'var(--yellow2)',dot:'#ffd700'};
-  if(h>=120||l>=80)return{lv:1,label:'正常高值',short:'偏高',color:'var(--blue)',bg:'var(--blue2)',dot:'#3d9eff'};
-  return{lv:0,label:'正常血压',short:'正常',color:'var(--green)',bg:'var(--green2)',dot:'#2ed573'};
-}
-function hrGrade(hr){
-  const h=parseFloat(hr)||0;
-  if(!h)return null;
-  if(h>100)return{label:'偏快',color:'var(--red)'};
-  if(h<60)return{label:'偏慢',color:'var(--blue)'};
-  return{label:'正常',color:'var(--green)'};
+  }).join('') + `
+    <button class="btn btn-ghost" onclick="openAddUser()">＋ 添加用户</button>
+    <button class="btn btn-ghost" style="margin-top:8px" onclick="openExport()">📤 导出数据</button>`;
 }
 
-// ── Init ──
-window.onload=()=>{
-  const now=new Date();
-  document.getElementById('today-lbl').textContent=now.toLocaleDateString('zh-CN',{year:'numeric',month:'long',day:'numeric',weekday:'long'});
-  document.getElementById('m-time').value=nowTime();
-  const users=getUsers();
-  if(!users.length){
-    // 引导添加第一个用户
-    setTimeout(()=>toast('👋 请先到「用户」页添加用户'),800);
-  } else {
-    if(!curUser||!users.find(u=>u.id===curUser)) curUser=users[0].id;
-    DB.set('curUser',curUser);
-  }
-  renderHome();
-};
-
-// ── Nav ──
-function go(name,btn){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
-  document.getElementById('pg-'+name).classList.add('active');
-  btn.classList.add('on');
-  if(name==='history')renderHistory();
-  if(name==='stats')renderStats();
-  if(name==='profile')renderProfilePage();
-  document.getElementById('pg-'+name).scrollTop=0;
-}
-
-function toast(msg){
-  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
-  clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2500);
-}
-function closeModal(id){document.getElementById(id).classList.remove('open');}
-
-// ── Users ──
-function calcAge(b){if(!b)return null;const bd=new Date(b),now=new Date();let a=now.getFullYear()-bd.getFullYear();if(now.getMonth()-bd.getMonth()<0||(now.getMonth()===bd.getMonth()&&now.getDate()<bd.getDate()))a--;return a;}
-function userAvatar(u){
-  const colors=['linear-gradient(135deg,#ff4757,#ff6b81)','linear-gradient(135deg,#3d9eff,#74b9ff)','linear-gradient(135deg,#2ed573,#7bed9f)','linear-gradient(135deg,#ffd700,#fdcb6e)','linear-gradient(135deg,#a29bfe,#6c5ce7)','linear-gradient(135deg,#fd79a8,#e84393)'];
-  const idx=getUsers().findIndex(x=>x.id===u.id)%colors.length;
-  return{bg:colors[Math.max(0,idx)],icon:u.gender==='女'?'👩':u.gender==='男'?'👨':'🧑'};
-}
-
-function switchUser(uid){
-  curUser=uid;DB.set('curUser',uid);
-  renderHome();renderUserBars();
-}
-
-function renderUserBars(){
-  const users=getUsers();
-  ['user-bar','hist-user-bar','stats-user-bar'].forEach(id=>{
-    const el=document.getElementById(id);if(!el)return;
-    el.innerHTML=users.map(u=>`<button class="user-chip ${u.id===curUser?'on':''}" onclick="switchUser('${u.id}')">${u.gender==='女'?'👩':u.gender==='男'?'👨':'🧑'} ${u.name}</button>`).join('')+
-    `<button class="user-chip add-btn" onclick="openAddUser()">＋ 添加</button>`;
+// ── Export ──
+function openExport() {
+  const u = getUsers().find(x=>x.id===curUser);
+  const bps = getBPs().filter(r=>r.uid===curUser).sort((a,b)=>a.date>b.date?1:-1);
+  const dailys = (getDailys()[curUser])||{};
+  let text = `拜拜高血压 - 数据导出\n用户：${u?.name||'未知'}\n导出时间：${new Date().toLocaleString('zh-CN')}\n${'='.repeat(40)}\n\n`;
+  const dates = [...new Set([...bps.map(r=>r.date),...Object.keys(dailys)])].sort();
+  dates.forEach(date => {
+    text += `【${date}】\n`;
+    const d = dailys[date]||{};
+    if (d.weight) text += `  体重：${d.weight} kg\n`;
+    if (d.ws && d.we) text += `  上班：${d.ws} → ${d.we}${d.weNext?' (+1天)':''}\n`;
+    if (d.ss && d.se) text += `  睡觉：${d.ss} → ${d.se}${d.seNext?' (+1天)':''}\n`;
+    const dayBPs = bps.filter(r=>r.date===date);
+    dayBPs.forEach(r => {
+      const g = bpGrade(r.high,r.low);
+      text += `  ${r.time||'--:--'} 血压 ${r.high||'?'}/${r.low||'?'} mmHg 心率 ${r.hr||'?'} 次/分 [${g.label}]\n`;
+    });
+    text += '\n';
   });
+  document.getElementById('export-area').textContent = text;
+  document.getElementById('export-modal').classList.add('open');
 }
-
-function openAddUser(){
-  editingUserId=null;
-  document.getElementById('user-modal-title').textContent='添加用户';
-  document.getElementById('del-user-btn').style.display='none';
-  ['u-name','u-job','u-birth'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('u-gender').value='';
-  document.getElementById('user-modal').classList.add('open');
-}
-function openEditUser(uid){
-  const u=getUsers().find(x=>x.id===uid);if(!u)return;
-  editingUserId=uid;
-  document.getElementById('user-modal-title').textContent='编辑用户';
-  document.getElementById('del-user-btn').style.display='block';
-  document.getElementById('u-name').value=u.name||'';
-  document.getElementById('u-gender').value=u.gender||'';
-  document.getElementById('u-job').value=u.job||'';
-  document.getElementById('u-birth').value=u.birth||'';
-  document.getElementById('user-modal').classList.add('open');
-}
-function saveUser(){
-  const name=document.getElementById('u-name').value.trim();
-  if(!name){toast('⚠️ 请输入姓名');return;}
-  const users=getUsers();
-  if(editingUserId){
-    const idx=users.findIndex(x=>x.id===editingUserId);
-    if(idx>=0){users[idx]={...users[idx],name,gender:document.getElementById('u-gender').value,job:document.getElementById('u-job').value.trim(),birth:document.getElementById('u-birth').value};}
-  } else {
-    const uid='u'+Date.now();
-    users.push({id:uid,name,gender:document.getElementById('u-gender').value,job:document.getElementById('u-job').value.trim(),birth:document.getElementById('u-birth').value});
-    if(!curUser){curUser=uid;DB.set('curUser',uid);}
-  }
-  saveUsers(users);closeModal('user-modal');toast('✅ 已保存');
-  renderHome();renderProfilePage();renderUserBars();
-}
-function deleteCurrentEditUser(){
-  if(!editingUserId)return;
-  if(!confirm('确认删除此用户？所有数据将保留但用户会被移除。'))return;
-  let users=getUsers().filter(x=>x.id!==editingUserId);
-  saveUsers(users);
-  if(curUser===editingUserId) curUser=users.length?users[0].id:null;
-  DB.set('curUser',curUser);
-  closeModal('user-modal');toast('🗑️ 已删除');
-  renderHome();renderProfilePage();renderUserBars();
-}
-
-// ── Daily modal ──
-function openModal(){
-  const d=(getDailys()[curUser]||{})[todayKey()]||{};
-  document.getElementById('d-weight').value=d.weight||'';
-  document.getElementById('d-ws').value=d.ws||'';document.getElementById('d-we').value=d.we||'';
-  document.getElementById('d-ss').value=d.ss||'';document.getElementById('d-se').value=d.se||'';
-  document.getElementById('daily-modal').classList.add('open');
-}
-function saveDaily(){
-  if(!curUser){toast('⚠️ 请先添加用户');return;}
-  const o=getDailys();if(!o[curUser])o[curUser]={};
-  o[curUser][todayKey()]={weight:document.getElementById('d-weight').value,ws:document.getElementById('d-ws').value,we:document.getElementById('d-we').value,ss:document.getElementById('d-ss').value,se:document.getElementById('d-se').value};
-  saveDailys(o);closeModal('daily-modal');toast('✅ 今日数据已保存');renderHome();
-}
-
-// ── Home ──
-function renderHome(){
-  renderUserBars();
-  const users=getUsers();
-  // Profile
-  const profEl=document.getElementById('home-prof');
-  if(!users.length){
-    profEl.innerHTML='<div style="color:var(--muted);font-size:14px;text-align:center;padding:8px 0">请到「用户」页添加用户 →</div>';
-  } else {
-    const u=users.find(x=>x.id===curUser)||users[0];
-    const age=calcAge(u.birth),av=userAvatar(u);
-    profEl.innerHTML=`<div class="prof-inner"><div class="avatar" style="background:${av.bg}">${av.icon}</div><div><div class="prof-name">${u.name}</div><div class="prof-meta">${u.gender||''}${u.job?' · '+u.job:''}</div>${age?`<div class="prof-age">🎂 ${age} 岁</div>`:''}</div><button onclick="openEditUser('${u.id}')" style="margin-left:auto;background:var(--s2);border:1px solid var(--bd);border-radius:9px;padding:5px 12px;font-size:12px;color:var(--muted);cursor:pointer">编辑</button></div>`;
-  }
-
-  // Alert
-  const alertEl=document.getElementById('alert-area');
-  const today=todayKey();
-  const todayBPs=getBPs().filter(r=>r.uid===curUser&&r.date===today).sort((a,b)=>a.time>b.time?1:-1);
-  // Check latest BP
-  alertEl.innerHTML='';
-  if(todayBPs.length){
-    const last=todayBPs[todayBPs.length-1];
-    const g=bpGrade(last.high,last.low);
-    if(g.lv>=2){
-      alertEl.innerHTML=`<div class="alert-banner" style="background:${g.bg};border:1px solid ${g.color};color:${g.color}"><span class="alert-icon">${g.lv>=3?'🚨':'⚠️'}</span><div><b>${g.label}</b>：最新高压 ${last.high||'—'}，低压 ${last.low||'—'}<br><span style="font-size:11px;opacity:.8">建议休息，必要时就医</span></div></div>`;
-    } else if(g.lv===1){
-      alertEl.innerHTML=`<div class="alert-banner" style="background:${g.bg};border:1px solid ${g.color};color:${g.color}"><span class="alert-icon">💙</span><div><b>${g.label}</b>：高压 ${last.high||'—'}，低压 ${last.low||'—'}<br><span style="font-size:11px;opacity:.8">注意休息，保持良好作息</span></div></div>`;
-    }
-  }
-
-  // Daily
-  const d=((getDailys()[curUser])||{})[today]||{};
-  const wh=timeDiff(d.ws,d.we),sh=timeDiff(d.ss,d.se);
-  document.getElementById('daily-card').innerHTML=`
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-      <div class="card-lbl" style="margin:0">今日数据</div>
-      <button class="edit-btn" onclick="openModal()">✏️ 编辑</button>
-    </div>
-    <div class="daily-row"><div class="d-icon" style="background:rgba(46,213,115,0.12)">⚖️</div><div><div class="d-key">体重</div><div class="d-val">${d.weight?d.weight+' kg':'—'}</div></div></div>
-    <div class="daily-row"><div class="d-icon" style="background:rgba(255,215,0,0.1)">💼</div><div><div class="d-key">上班时间</div><div class="d-val">${d.ws&&d.we?d.ws+' → '+d.we:'—'}</div>${wh?`<div class="d-sub">时长 ${wh} 小时</div>`:''}</div></div>
-    <div class="daily-row"><div class="d-icon" style="background:rgba(61,158,255,0.12)">🌙</div><div><div class="d-key">睡觉时间</div><div class="d-val">${d.ss&&d.se?d.ss+' → '+d.se:'—'}</div>${sh?`<div class="d-sub">时长 ${sh} 小时</div>`:''}</div></div>`;
-
-  // BP count badge
-  document.getElementById('bp-badge').textContent=`今日 ${todayBPs.length}/3`;
-
-  // Today BPs
-  const bpEl=document.getElementById('today-bps');
-  bpEl.innerHTML=todayBPs.length?todayBPs.map(r=>bpCardHTML(r,true)).join(''):'<div style="text-align:center;color:var(--muted);font-size:14px;padding:12px 0 6px">今天还没有血压记录</div>';
-
-  // Hide add box if 3 already
-  document.getElementById('add-box').style.display=todayBPs.length>=3?'none':'block';
-  if(todayBPs.length>=3){
-    document.getElementById('today-bps').insertAdjacentHTML('afterend','<div style="text-align:center;color:var(--muted);font-size:13px;padding:8px 0">今日已记录3次，明天继续 💪</div>');
-  }
-}
-
-// ── BP card HTML ──
-function bpCardHTML(r,showDel){
-  const g=bpGrade(r.high,r.low),hr=hrGrade(r.hr);
-  return `<div class="bp-card">
-    <div class="bp-top">
-      <span class="bp-time">🕐 ${r.time||'—'}</span>
-      <span class="bp-badge" style="background:${g.bg};color:${g.color}">${g.short}</span>
-      ${hr?`<span class="bp-badge" style="background:rgba(255,255,255,0.06);color:${hr.color}">心率${hr.label}</span>`:''}
-    </div>
-    <div class="bp-vals">
-      <div class="bpv"><div class="bvk">高压</div><div class="bvv" style="color:${g.color}">${r.high||'—'}</div><div class="bvu">mmHg</div></div>
-      <div class="bpv"><div class="bvk">低压</div><div class="bvv" style="color:var(--blue)">${r.low||'—'}</div><div class="bvu">mmHg</div></div>
-      <div class="bpv"><div class="bvk">心率</div><div class="bvv" style="color:${hr?hr.color:'var(--text)'}">${r.hr||'—'}</div><div class="bvu">次/分</div></div>
-    </div>
-    ${showDel?`<button class="del-btn" onclick="delBP(${r.id})">×</button>`:''}
-  </div>`;
-}
-
-function addBP(){
-  if(!curUser){toast('⚠️ 请先添加用户');return;}
-  const today=todayKey();
-  if(getBPs().filter(r=>r.uid===curUser&&r.date===today).length>=3){toast('⚠️ 今天已记录3次');return;}
-  const high=document.getElementById('m-high').value,low=document.getElementById('m-low').value,hr=document.getElementById('m-hr').value;
-  if(!high&&!low&&!hr){toast('⚠️ 请至少填写一项');return;}
-  const arr=[...getBPs(),{id:Date.now(),uid:curUser,date:today,time:document.getElementById('m-time').value,high,low,hr}];
-  saveBPs(arr);
-  document.getElementById('m-high').value='';document.getElementById('m-low').value='';document.getElementById('m-hr').value='';
-  document.getElementById('m-time').value=nowTime();
-  // Alert check
-  const g=bpGrade(high,low);
-  if(g.lv>=3) toast('🚨 血压偏高！建议立即休息');
-  else if(g.lv===2) toast('⚠️ 血压偏高，注意休息');
-  else toast('✅ 已记录！');
-  renderHome();
-}
-function delBP(id){
-  if(!confirm('确认删除？'))return;
-  saveBPs(getBPs().filter(r=>r.id!==id));toast('🗑️ 已删除');renderHome();
-}
-
-// ── History ──
-function renderHistory(){
-  renderUserBars();
-  const el=document.getElementById('history-content');
-  const bps=getBPs().filter(r=>r.uid===curUser).sort((a,b)=>{if(a.date!==b.date)return b.date>a.date?1:-1;return a.time>b.time?1:-1;});
-  const dailys=(getDailys()[curUser])||{};
-  const dates=[...new Set([...bps.map(r=>r.date),...Object.keys(dailys)])].sort((a,b)=>b>a?1:-1);
-  if(!dates.length){el.innerHTML='<div class="empty"><div class="ei">📭</div><div>暂无记录</div></div>';return;}
-  el.innerHTML=dates.map(date=>{
-    const d=dailys[date]||{},dayBPs=bps.filter(r=>r.date===date),wh=timeDiff(d.ws,d.we),sh=timeDiff(d.ss,d.se);
-    const dt=new Date(date+'T00:00:00'),now=new Date();now.setHours(0,0,0,0);
-    const diff=Math.round((now-dt)/86400000),wd=['日','一','二','三','四','五','六'][dt.getDay()];
-    const lbl=diff===0?'今天':diff===1?'昨天':`${date} 周${wd}`;
-    const dHtml=(d.weight||d.ws||d.ss)?`<div class="card" style="padding:11px 14px;margin-bottom:8px">
-      ${d.weight?`<div style="font-size:13px;margin-bottom:5px">⚖️ 体重 <b style="color:var(--green)">${d.weight} kg</b></div>`:''}
-      ${d.ws&&d.we?`<div style="font-size:13px;margin-bottom:5px">💼 上班 <b>${d.ws} → ${d.we}</b>${wh?` <span style="color:var(--muted);font-size:11px">${wh}h</span>`:''}</div>`:''}
-      ${d.ss&&d.se?`<div style="font-size:13px">🌙 睡觉 <b>${d.ss} → ${d.se}</b>${sh?` <span style="color:var(--muted);font-size:11px">${sh}h</span>`:''}</div>`:''}
-    </div>`:'';
-    return `<div class="day-g"><div class="day-hdr">${lbl}</div>${dHtml}${dayBPs.map(r=>bpCardHTML(r,false)).join('')}</div>`;
-  }).join('');
-}
-
-// ── Stats ──
-function setPeriod(p,btn){curPeriod=p;document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));btn.classList.add('on');renderStats();}
-function renderStats(){
-  renderUserBars();
-  const el=document.getElementById('stats-content');
-  const bps=getBPs().filter(r=>r.uid===curUser);
-  const dailys=(getDailys()[curUser])||{};
-  const now=new Date();
-  function inP(d){const diff=(now-new Date(d+'T00:00:00'))/86400000;if(curPeriod==='week')return diff<=7;if(curPeriod==='month')return diff<=30;if(curPeriod==='quarter')return diff<=90;return true;}
-  const fb=bps.filter(r=>inP(r.date)),fd=Object.keys(dailys).filter(inP);
-  if(!fb.length&&!fd.length){el.innerHTML='<div class="empty"><div class="ei">📊</div><div>该时间段暂无数据</div></div>';return;}
-  const highs=fb.filter(r=>r.high).map(r=>+r.high),lows=fb.filter(r=>r.low).map(r=>+r.low),hrs=fb.filter(r=>r.hr).map(r=>+r.hr);
-  const weights=fd.filter(d=>dailys[d]?.weight).map(d=>+dailys[d].weight);
-  const sleeps=fd.filter(d=>dailys[d]?.ss&&dailys[d]?.se).map(d=>+timeDiff(dailys[d].ss,dailys[d].se));
-  const maxV=a=>a.length?Math.max(...a).toFixed(0):'—',minV=a=>a.length?Math.min(...a).toFixed(0):'—';
-  const cDates=[...new Set(fb.map(r=>r.date))].sort().slice(-14);
-  function dAvg(date,f){const v=fb.filter(r=>r.date===date&&r[f]).map(r=>+r[f]);return v.length?v.reduce((a,b)=>a+b,0)/v.length:null;}
-  function chart(data,color){
-    const vals=data.map(d=>d.v),mx=Math.max(...vals.filter(Boolean))||1,mn=Math.min(...vals.filter(Boolean))||0,rng=mx-mn||1;
-    return '<div class="bars">'+data.map(d=>{const p=d.v?((d.v-mn)/rng*60+15):4;return`<div class="bw"><div class="b" style="height:${p}%;background:${d.v?color:'rgba(255,255,255,0.05)'}"></div><div class="bl">${d.l}</div></div>`;}).join('')+'</div>';
-  }
-  const wDates=fd.filter(d=>dailys[d]?.weight).sort().slice(-14);
-  const avgHigh=avg(highs);
-  const avgGrade=avgHigh!=='—'?bpGrade(avgHigh,avg(lows)):null;
-
-  el.innerHTML=`
-    ${avgGrade&&avgGrade.lv>=1?`<div class="alert-banner" style="background:${avgGrade.bg};border:1px solid ${avgGrade.color};color:${avgGrade.color};margin-bottom:12px"><span class="alert-icon">📊</span><div>平均血压等级：<b>${avgGrade.label}</b><br><span style="font-size:11px;opacity:.8">高压均值 ${avgHigh} mmHg</span></div></div>`:''}
-    <div class="stats-g">
-      <div class="stat-card"><div class="sv" style="color:var(--red)">${avg(highs)}</div><div class="sl">平均高压 mmHg</div></div>
-      <div class="stat-card"><div class="sv" style="color:var(--blue)">${avg(lows)}</div><div class="sl">平均低压 mmHg</div></div>
-      <div class="stat-card"><div class="sv" style="color:var(--red)">${avg(hrs)}</div><div class="sl">平均心率 次/分</div></div>
-      <div class="stat-card"><div class="sv" style="color:var(--green)">${avg(weights)}</div><div class="sl">平均体重 kg</div></div>
-      <div class="stat-card"><div class="sv">${maxV(highs)} / ${minV(highs)}</div><div class="sl">高压 最高/最低</div></div>
-      <div class="stat-card"><div class="sv" style="color:var(--blue)">${avg(sleeps)}</div><div class="sl">平均睡眠 h</div></div>
-    </div>
-    <div class="grade-ref">
-      <div style="font-size:10px;font-weight:700;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:8px">血压分级参考</div>
-      ${[['#2ed573','正常 <120/<80'],['#3d9eff','正常高值 120-139/80-89'],['#ffd700','1级 140-159/90-99'],['#ff9f43','2级 160-179/100-109'],['#ff4757','3级 ≥180/≥110']].map(([c,l])=>`<div class="grade-row"><div class="grade-dot" style="background:${c}"></div><span style="color:var(--muted)">${l}</span></div>`).join('')}
-    </div>
-    ${highs.length>1?`<div class="chart-card"><div class="ct">📈 高压趋势</div>${chart(cDates.map(d=>({v:dAvg(d,'high'),l:d.slice(5)})),'var(--red)')}</div>`:''}
-    ${hrs.length>1?`<div class="chart-card"><div class="ct">❤️ 心率趋势</div>${chart(cDates.map(d=>({v:dAvg(d,'hr'),l:d.slice(5)})),'#ff6b81')}</div>`:''}
-    ${weights.length>1?`<div class="chart-card"><div class="ct">⚖️ 体重趋势</div>${chart(wDates.map(d=>({v:+dailys[d].weight,l:d.slice(5)})),'var(--green)')}</div>`:''}
-    ${sleeps.length>1?`<div class="chart-card"><div class="ct">🌙 睡眠趋势</div>${chart(fd.filter(d=>dailys[d]?.ss&&dailys[d]?.se).sort().slice(-14).map(d=>({v:+timeDiff(dailys[d].ss,dailys[d].se),l:d.slice(5)})),'var(--blue)')}</div>`:''}`;
-}
-
-// ── Profile page ──
-function renderProfilePage(){
-  const users=getUsers();
-  const el=document.getElementById('profile-content');
-  if(!users.length){
-    el.innerHTML=`<div class="empty"><div class="ei">👥</div><div>还没有用户</div></div><div style="padding:0 0 12px"><button class="btn btn-red" onclick="openAddUser()">＋ 添加第一个用户</button></div>`;
-    return;
-  }
-  el.innerHTML=users.map(u=>{
-    const age=calcAge(u.birth),av=userAvatar(u);
-    return `<div class="card" style="cursor:pointer" onclick="openEditUser('${u.id}')">
-      <div class="prof-inner">
-        <div class="avatar" style="background:${av.bg};width:46px;height:46px;font-size:22px">${av.icon}</div>
-        <div><div class="prof-name" style="font-size:16px">${u.name}</div><div class="prof-meta">${u.gender||''}${age?' · '+age+' 岁':''}${u.job?' · '+u.job:''}</div></div>
-        <div style="margin-left:auto;color:var(--muted);font-size:18px">›</div>
-      </div>
-    </div>`;
-  }).join('')+`<button class="btn btn-ghost" onclick="openAddUser()">＋ 添加用户</button>`;
+function copyExport() {
+  const text = document.getElementById('export-area').textContent;
+  navigator.clipboard.writeText(text).then(() => toast('✅ 已复制！可粘贴发送')).catch(() => { const el=document.getElementById('export-area'); el.select && el.select(); document.execCommand('copy'); toast('✅ 已复制！'); });
 }
 </script>
 </body>
